@@ -1,5 +1,5 @@
-#ifndef __MODULEPLAYER_H__
-#define __MODULEPLAYER_H__
+#ifndef __MODULEENEMY_H__
+#define __MODULEENEMY_H__
 
 #include "Module.h"
 #include "Animation.h"
@@ -10,16 +10,15 @@
 
 struct SDL_Texture;
 
-class ModulePlayer : public Module
+class ModuleEnemy : public Module
 {
 public:
-	ModulePlayer(bool start_enabled = true);
-	~ModulePlayer();
+	ModuleEnemy(bool start_enabled = true);
+	~ModuleEnemy();
 
 	bool Start();
 	update_status Update();
 	bool CleanUp();
-	void OnCollision(Collider* c1, Collider* c2);
 
 public:
 
@@ -32,4 +31,4 @@ public:
 
 };
 
-#endif // __MODULEPLAYER_H__
+#endif // __MODULEENEMY_H__

@@ -52,6 +52,18 @@
     <ClInclude Include="ModulePlayer.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Core Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCollisions.h">
+      <Filter>Core Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEnemy.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Directions.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -82,6 +94,12 @@
       <Filter>Core Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModulePlayer.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCollisions.cpp">
+      <Filter>Core Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEnemy.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
   </ItemGroup>

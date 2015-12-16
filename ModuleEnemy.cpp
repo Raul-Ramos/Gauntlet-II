@@ -1,21 +1,21 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModulePlayer.h"
-#include "ModuleInput.h"
+#include "ModuleEnemy.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
 #include "SDL/include/SDL.h"
 
-// Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
-ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
+//TODO: A lot of things in common between ModulePlayer and ModuleEnemy. Inheritance?
+
+ModuleEnemy::ModuleEnemy(bool start_enabled) : Module(start_enabled)
 {
-	position.x = 0;
-	position.y = 0;
+	position.x = 50;
+	position.y = 50;
 
 	// Reads the animations out of the spritesheet
-	
-	int yValue = (18 * 9) + 1;	//(Tilesize * line) + border
+
+	int yValue = (18 * 0) + 1;	//(Tilesize * line) + border
 	int dim = 18 - 2;			//Dimension. Tilesize - (border*2). Both width and height.
 
 	//Adds the three sprites of walking to their respective animations
@@ -38,24 +38,23 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	animations[UPLEFT].speed = 0.2f;
 }
 
-ModulePlayer::~ModulePlayer()
+ModuleEnemy::~ModuleEnemy()
 {
-	// Homework : check for memory leaks
 }
 
 // Load assets
-bool ModulePlayer::Start()
+bool ModuleEnemy::Start()
 {
 	LOG("Loading player");
 
 	graphics = App->textures->Load("gauntlet2.png");
-	collider = App->collisions->AddCollider(PLAYER, { position.x, position.y, 18, 18 }, this);
+	collider = App->collisions->AddCollider(ENEMY, { position.x, position.y, 18, 18 }, this);
 
 	return true;
 }
 
 // Unload assets
-bool ModulePlayer::CleanUp()
+bool ModuleEnemy::CleanUp()
 {
 	LOG("Unloading player");
 
@@ -65,16 +64,10 @@ bool ModulePlayer::CleanUp()
 }
 
 // Update
-update_status ModulePlayer::Update()
+update_status ModuleEnemy::Update()
 {
 	int facingH = 0;
 	int facingV = 0;
-
-	//Key reading
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) facingH = 1;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) facingH = -1;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) facingV = 1;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) facingV = -1;
 
 	//Determine facing direction
 	if (facingV < 0){
@@ -90,26 +83,14 @@ update_status ModulePlayer::Update()
 	else if (facingH > 0) { facing = RIGHT; }
 	else if (facingH < 0) { facing = LEFT; }
 
-	//Move the character position & collider
+	//Move the character position
 	//+ speed * facingDirection
 	position.x += 1 * facingH;
 	position.y -= 1 * facingV;
 	collider->setPos(position.x, position.y);
 
 	//If there's movement, animate. If not, static image.
-	if (facingH != 0 || facingV != 0){
-		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
-	}
-	else {
-		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentFrame()), 1.0f);
-	}
-	
+	App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
 
 	return UPDATE_CONTINUE;
-}
-
-void ModulePlayer::OnCollision(Collider* col1, Collider* col2){
-	if (col2->type == ENEMY){
-		LOG("UUUGH! Collision!");
-	}
 }

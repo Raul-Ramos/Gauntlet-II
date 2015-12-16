@@ -6,6 +6,8 @@
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
 #include "ModulePlayer.h"
+#include "ModuleCollisions.h"
+#include "ModuleEnemy.h"
 
 using namespace std;
 
@@ -19,8 +21,11 @@ Application::Application()
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(audio = new ModuleAudio());
 
+	modules.push_back(collisions = new ModuleCollisions());
+
 	// Game Modules
 	modules.push_back(player = new ModulePlayer(false));
+	modules.push_back(enemy = new ModuleEnemy(true));
 	modules.push_back(fade = new ModuleFadeToBlack());
 }
 
