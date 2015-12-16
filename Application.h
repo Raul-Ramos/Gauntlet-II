@@ -11,6 +11,7 @@ class ModuleTextures;
 class ModuleInput;
 class ModuleAudio;
 class ModuleFadeToBlack;
+class ModulePlayer;
 
 class Application
 {
@@ -29,6 +30,7 @@ public:
 	ModuleTextures* textures;
 	ModuleInput* input;
 	ModuleAudio* audio;
+	ModulePlayer* player;
 	ModuleFadeToBlack* fade;
 
 private:

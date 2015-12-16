@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
+#include "ModulePlayer.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ Application::Application()
 	modules.push_back(audio = new ModuleAudio());
 
 	// Game Modules
+	modules.push_back(player = new ModulePlayer(false));
 	modules.push_back(fade = new ModuleFadeToBlack());
 }
 
@@ -40,6 +42,8 @@ bool Application::Init()
 		if((*it)->IsEnabled() == true)
 			ret = (*it)->Start();
 	}
+
+	player->Enable();
 
 	return ret;
 }
