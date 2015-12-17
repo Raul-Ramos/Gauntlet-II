@@ -14,6 +14,7 @@ class ModuleFadeToBlack;
 class ModulePlayer;
 class ModuleEnemy;
 class ModuleCollisions;
+class ModuleParticles;
 
 class Application
 {
@@ -32,6 +33,7 @@ public:
 	ModuleTextures* textures;
 	ModuleInput* input;
 	ModuleAudio* audio;
+	ModuleParticles* particles;
 	ModuleCollisions* collisions;
 	ModulePlayer* player;
 	ModuleEnemy* enemy;

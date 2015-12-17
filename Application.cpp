@@ -6,6 +6,7 @@
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
 #include "ModulePlayer.h"
+#include "ModuleParticles.h"
 #include "ModuleCollisions.h"
 #include "ModuleEnemy.h"
 
@@ -21,6 +22,7 @@ Application::Application()
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(audio = new ModuleAudio());
 
+	modules.push_back(particles = new ModuleParticles());
 	modules.push_back(collisions = new ModuleCollisions());
 
 	// Game Modules

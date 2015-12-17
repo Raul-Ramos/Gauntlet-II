@@ -7,6 +7,10 @@
 #include "ModuleCollisions.h"
 #include "SDL/include/SDL.h"
 
+//TODO: Could be innecesary
+#include "Particle.h"
+#include "ModuleParticles.h"
+
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 {
@@ -103,7 +107,30 @@ update_status ModulePlayer::Update()
 	else {
 		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentFrame()), 1.0f);
 	}
-	
+
+	//Attack
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN){
+
+		Particle* particle = new Particle();
+		particle->facing = facing;
+		particle->graphics = graphics;
+		particle->collider = App->collisions->AddCollider(PLAYER_PROJECTILE, { position.x, position.y, 18, 18 }, this);
+		particle->position = { position.x, position.y };
+		//TODO: Depending on facing, no facing H-V
+		particle->speed = { facingH * 2, facingV * 2 };
+		
+		//Does the throw animation
+		int yValue = (18 * 9) + 1;				//(Tilesize * line) + border
+		int dim = 18 - 2;						//Dimension. Tilesize - (border*2). Both width and height.
+		
+		for (int i = 0; i < 8; i++){
+			//Xvalue = Tilesize * ( column + animationStep ) + border
+			particle->animation.frames.push_back({ 18 * (24 + i) + 1, yValue, dim, dim });
+		}
+
+		App->particles->AddParticles(particle);
+
+	}
 
 	return UPDATE_CONTINUE;
 }

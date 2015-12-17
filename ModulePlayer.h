@@ -5,10 +5,10 @@
 #include "Animation.h"
 #include "Globals.h"
 #include "Point.h"
-#include "Collider.h"
 #include "Directions.h"
 
 struct SDL_Texture;
+struct Collider;
 
 class ModulePlayer : public Module
 {

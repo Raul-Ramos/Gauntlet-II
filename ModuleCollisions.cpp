@@ -32,23 +32,19 @@ ModuleCollisions::~ModuleCollisions()
 // Called before render is available
 update_status ModuleCollisions::Update()
 {
-
 	Collider* c1;
 	Collider* c2;
 
 	//Does every element with every other element except itself
-	int x, y = 0;
-	int end = colliders.size();
-	while(y < end - 1){
+	for (int y = 0; y < colliders.size() - 1; y++){
 
 		c1 = colliders.at(y);
-		x = y + 1;
 
-		while (x < end){
+		for (int x = y + 1; x < colliders.size(); x++){
 
 			//Checks if there is a collision
 			if (matrix[c1->type][colliders.at(x)->type]){			//If their collision is allowed
-				if (c1->CheckCollision(colliders.at(x)->box)){	//If they actually collide
+				if (c1->CheckCollision(colliders.at(x)->box)){		//If they actually collide
 
 					c2 = colliders.at(x);
 
@@ -56,16 +52,28 @@ update_status ModuleCollisions::Update()
 					c1->father->OnCollision(c1, c2);
 					c2->father->OnCollision(c2, c1);
 
-					//TODO: Consider if a element gets eliminated from "colliders"
 				}
 			}
-			++x;
 		}
-		++y;
 	}
 
 	return UPDATE_CONTINUE;
+}
 
+update_status ModuleCollisions::PostUpdate(){
+
+	//Deletes colliders marked for it
+	std::vector<std::string>::size_type i = 0;
+	while (i < colliders.size()) {
+		if (colliders[i]->toDelete) {
+			colliders.erase(colliders.begin() + i);
+		}
+		else {
+			++i;
+		}
+	}
+
+	return UPDATE_CONTINUE;
 }
 
 // Called before quitting

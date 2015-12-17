@@ -25,9 +25,6 @@
     <ClInclude Include="ModuleWindow.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Core Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -52,9 +49,6 @@
     <ClInclude Include="ModulePlayer.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Collider.h">
-      <Filter>Core Modules</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleCollisions.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
@@ -63,6 +57,18 @@
     </ClInclude>
     <ClInclude Include="Directions.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleParticles.h">
+      <Filter>Core Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Core Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Core Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Core Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +107,12 @@
     </ClCompile>
     <ClCompile Include="ModuleEnemy.cpp">
       <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleParticles.cpp">
+      <Filter>Core Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Core Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

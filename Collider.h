@@ -22,6 +22,7 @@ struct Collider
 	COLLIDER_TYPE type;
 	SDL_Rect box;
 	Module* father;
+	bool toDelete = false;
 
 	Collider(COLLIDER_TYPE type, SDL_Rect box, Module* father) :
 		type(type), box(box), father(father) {}
