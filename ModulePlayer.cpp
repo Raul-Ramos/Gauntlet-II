@@ -111,13 +111,27 @@ update_status ModulePlayer::Update()
 	//Attack
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN){
 
+		//Creates the particle
 		Particle* particle = new Particle();
 		particle->facing = facing;
 		particle->graphics = graphics;
 		particle->collider = App->collisions->AddCollider(PLAYER_PROJECTILE, { position.x, position.y, 18, 18 }, this);
 		particle->position = { position.x, position.y };
-		//TODO: Depending on facing, no facing H-V
-		particle->speed = { facingH * 2, facingV * 2 };
+
+		int dirH, dirV;
+		switch (facing)
+		{
+		case UP:		dirH = 0; dirV = -1;  break;
+		case UPRIGHT:	dirH = 1; dirV = -1;  break;
+		case RIGHT:		dirH = 1; dirV = 0;   break;
+		case DOWNRIGHT: dirH = 1; dirV = 1;   break;
+		case DOWN:		dirH = 0; dirV = 1;   break;
+		case DOWNLEFT:	dirH = -1; dirV = 1;  break;
+		case LEFT:		dirH = -1; dirV = 0;  break;
+		case UPLEFT:	dirH = -1; dirV = -1; break;
+		default:		dirH = 0; dirV = -1;  break;
+		}
+		particle->speed = { dirH * 2, dirV * 2 };
 		
 		//Does the throw animation
 		int yValue = (18 * 9) + 1;				//(Tilesize * line) + border
@@ -127,6 +141,7 @@ update_status ModulePlayer::Update()
 			//Xvalue = Tilesize * ( column + animationStep ) + border
 			particle->animation.frames.push_back({ 18 * (24 + i) + 1, yValue, dim, dim });
 		}
+		particle->animation.speed = 0.5f;
 
 		App->particles->AddParticles(particle);
 
