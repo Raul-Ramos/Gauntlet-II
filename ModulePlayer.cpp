@@ -115,8 +115,9 @@ update_status ModulePlayer::Update()
 		Particle* particle = new Particle();
 		particle->facing = facing;
 		particle->graphics = graphics;
-		particle->collider = App->collisions->AddCollider(PLAYER_PROJECTILE, { position.x, position.y, 18, 18 }, this);
+		particle->collider = App->collisions->AddCollider(PLAYER_PROJECTILE, { position.x, position.y, 18, 18 });
 		particle->position = { position.x, position.y };
+		particle->duration = 10000;
 
 		int dirH, dirV;
 		switch (facing)

@@ -16,7 +16,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	Collider* AddCollider(COLLIDER_TYPE type, SDL_Rect box, Module* father);
+	Collider* AddCollider(COLLIDER_TYPE type, SDL_Rect box, Module* father = NULL);
 
 private:
 

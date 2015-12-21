@@ -49,8 +49,8 @@ update_status ModuleCollisions::Update()
 					c2 = colliders.at(x);
 
 					//Tells them they have collided
-					c1->father->OnCollision(c1, c2);
-					c2->father->OnCollision(c2, c1);
+					if (c1->father != NULL) c1->father->OnCollision(c1, c2);
+					if (c2->father != NULL) c2->father->OnCollision(c2, c1);
 
 				}
 			}

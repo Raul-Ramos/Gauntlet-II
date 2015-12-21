@@ -1,6 +1,21 @@
 #include "Particle.h"
 #include "Application.h"
 #include "ModuleRender.h"
+#include "SDL/include/SDL.h"
+#include "Collider.h"
+
+Particle::Particle(){
+	begun = SDL_GetTicks();
+}
+
+void Particle::MarkForDead(){
+	toDelete = true;
+	collider->toDelete = true;
+}
+
+bool Particle::isMarkedForDead() const{
+	return toDelete;
+}
 
 update_status Particle::Update()
 {

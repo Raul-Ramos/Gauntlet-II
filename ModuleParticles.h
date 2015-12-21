@@ -14,7 +14,7 @@ public:
 
 	//update_status PreUpdate();
 	update_status Update();
-	//update_status PostUpdate();
+	update_status PostUpdate();
 	bool CleanUp();
 
 	void AddParticles(Particle* particle);
