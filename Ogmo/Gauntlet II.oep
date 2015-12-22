@@ -16,7 +16,7 @@
     <Width>5280</Width>
     <Height>5280</Height>
   </LevelMaximumSize>
-  <Filename>C:\Users\Usuario\Documents\Visual Studio 2013\Projects\Gauntlet-II\Ogmo\Ogmo\Gauntlet II.oep</Filename>
+  <Filename>C:\Users\Usuario\Documents\Visual Studio 2013\Projects\Gauntlet-II\Ogmo\Gauntlet II.oep</Filename>
   <AngleMode>Radians</AngleMode>
   <CameraEnabled>false</CameraEnabled>
   <CameraSize>
@@ -54,7 +54,7 @@
   <Tilesets>
     <Tileset>
       <Name>Tileset</Name>
-      <FilePath>..\..\Game\gauntlet2.png</FilePath>
+      <FilePath>..\Game\gauntlet2.png</FilePath>
       <TileSize>
         <Width>16</Width>
         <Height>16</Height>

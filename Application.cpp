@@ -10,6 +10,8 @@
 #include "ModuleCollisions.h"
 #include "ModuleEnemy.h"
 
+#include "ModuleMap.h" //TODO: delete
+
 using namespace std;
 
 Application::Application()
@@ -51,6 +53,8 @@ bool Application::Init()
 	}
 
 	player->Enable();
+
+	ModuleMap* map = new ModuleMap(); //TODO: Delete
 
 	return ret;
 }
