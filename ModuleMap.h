@@ -3,12 +3,27 @@
 
 #include "Globals.h"
 #include "Module.h"
+#include "Point.h"
+#include "ModuleCollectible.h"
 
 #include <vector>
 
 using namespace std;
 
 struct SDL_Texture;
+
+//Elements ID in the XML
+#define FLOOR 544
+#define WALL 575
+#define CHEST 285
+#define KEY 283
+#define DOOR 313
+#define BONES 266
+#define ENEMY_SPAWN 271
+#define MEAT 280
+#define DRINK 277
+#define EXIT 264
+#define EXIT_TO_6 265
 
 //Direction where a given wall is connected to another
 //Follows a binary system
@@ -34,7 +49,7 @@ enum WallDirection{
 
 struct Wall {
 	WallDirection direction;
-	int x, y;
+	iPoint position;
 };
 
 class ModuleMap : public Module
@@ -47,12 +62,25 @@ public:
 	update_status Update();
 
 private:
-	SDL_Rect wallPreset[16];
+	//Map properties
 	int width;
 	int height;
 
-	vector<Wall*> walls;
+	//Graphics
 	SDL_Texture* graphics = nullptr;
+
+	//Elements in the map
+	vector<Wall*> walls;
+	vector<iPoint*> floor;
+	vector<ModuleCollectible*> collectibles;
+
+	//Images prepared for rendering
+	SDL_Rect wallPreset[16];
+	SDL_Rect floorPreset;
+
+	//Collectible factory
+	ModuleCollectible* CreateCollectible(TypeCollectible type, iPoint position);
+
 };
 
 #endif // __MODULEMAP_H__

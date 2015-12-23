@@ -10,7 +10,12 @@ struct SDL_Texture;
 struct Collider;
 
 enum TypeCollectible{
-	COLLECTIBLE_TREASURE
+	COLLECTIBLE_TREASURE,
+	COLLECTIBLE_MEAT,
+	COLLECTIBLE_DRINK,
+	COLLECTIBLE_KEY,
+	COLLECTIBLE_EXIT,
+	COLLECTIBLE_EXIT_TO_6,
 };
 
 class ModuleCollectible : public Module

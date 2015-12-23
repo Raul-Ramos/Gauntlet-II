@@ -72,10 +72,6 @@ bool ModuleMap::Start(){
 		//Gets X and Y
 		x = (i % width);
 		y = (i / width);
-		
-		if (x == 1 && y == 1){
-			LOG("%i", worldValues[i]);
-		}
 
 		switch (worldValues[i])
 		{
@@ -113,6 +109,25 @@ bool ModuleMap::Start(){
 			collectibles.push_back(CreateCollectible(COLLECTIBLE_TREASURE, {x*16,y*16}));
 			break;
 
+		case MEAT:
+			collectibles.push_back(CreateCollectible(COLLECTIBLE_MEAT, { x * 16, y * 16 }));
+			break;
+
+		case DRINK:
+			collectibles.push_back(CreateCollectible(COLLECTIBLE_DRINK, { x * 16, y * 16 }));
+			break;
+
+		case KEY:
+			collectibles.push_back(CreateCollectible(COLLECTIBLE_KEY, { x * 16, y * 16 }));
+			break;
+
+		case EXIT:
+			collectibles.push_back(CreateCollectible(COLLECTIBLE_EXIT, { x * 16, y * 16 }));
+			break;
+
+		case EXIT_TO_6:
+			collectibles.push_back(CreateCollectible(COLLECTIBLE_EXIT_TO_6, { x * 16, y * 16 }));
+			break;
 
 		default:
 			break;
@@ -124,15 +139,18 @@ bool ModuleMap::Start(){
 
 update_status ModuleMap::Update(){
 	
+	//Renders the walls
 	for (int i = 0; i < walls.size(); i++)
 	{
 		App->renderer->Blit(graphics, walls[i]->position.x, walls[i]->position.y, &wallPreset[walls[i]->direction], 1.0f);
 	}
 
+	//Renders the floor
 	for (int i = 0; i < floor.size(); i++){
 		App->renderer->Blit(graphics, floor[i]->x, floor[i]->y, &floorPreset, 1.0f);
 	}
 
+	//Renders the collectibles
 	for (int i = 0; i < collectibles.size(); i++)
 	{
 		collectibles[i]->Update();
@@ -147,11 +165,36 @@ ModuleCollectible* ModuleMap::CreateCollectible(TypeCollectible type, iPoint pos
 	Animation animation;
 	int dim = 18 - 2;
 
-	if (type == COLLECTIBLE_TREASURE){
+	switch (type)
+	{
+	case COLLECTIBLE_TREASURE:
 		animation.frames.push_back({ (21 * 18) + 1, (6 * 18) + 1, dim, dim });
 		animation.frames.push_back({ (22 * 18) + 1, (6 * 18) + 1, dim, dim });
 		animation.frames.push_back({ (23 * 18) + 1, (6 * 18) + 1, dim, dim });
 		animation.speed = 0.1f;
+		break;
+	case COLLECTIBLE_MEAT:
+		animation.frames.push_back({ (16 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation.speed = 0.0f;
+		break;
+	case COLLECTIBLE_DRINK:
+		animation.frames.push_back({ (13 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation.speed = 0.0f;
+		break;
+	case COLLECTIBLE_KEY:
+		animation.frames.push_back({ (19 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation.speed = 0.0f;
+		break;
+	case COLLECTIBLE_EXIT:
+		animation.frames.push_back({ (0 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation.speed = 0.0f;
+		break;
+	case COLLECTIBLE_EXIT_TO_6:
+		animation.frames.push_back({ (1 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation.speed = 0.0f;
+		break;
+	default:
+		break;
 	}
 
 	collectible->animation = animation;
