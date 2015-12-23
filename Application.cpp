@@ -9,8 +9,7 @@
 #include "ModuleParticles.h"
 #include "ModuleCollisions.h"
 #include "ModuleEnemy.h"
-
-#include "ModuleMap.h" //TODO: delete
+#include "ModuleMap.h"
 
 using namespace std;
 
@@ -24,6 +23,7 @@ Application::Application()
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(audio = new ModuleAudio());
 
+	modules.push_back(map = new ModuleMap());
 	modules.push_back(particles = new ModuleParticles());
 	modules.push_back(collisions = new ModuleCollisions());
 

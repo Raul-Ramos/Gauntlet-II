@@ -15,6 +15,7 @@ class ModulePlayer;
 class ModuleEnemy;
 class ModuleCollisions;
 class ModuleParticles;
+class ModuleMap;
 
 class Application
 {
@@ -35,6 +36,7 @@ public:
 	ModuleAudio* audio;
 	ModuleParticles* particles;
 	ModuleCollisions* collisions;
+	ModuleMap* map;
 	ModulePlayer* player;
 	ModuleEnemy* enemy;
 	ModuleFadeToBlack* fade;

@@ -100,6 +100,9 @@ update_status ModulePlayer::Update()
 	position.y -= 1 * facingV;
 	collider->setPos(position.x, position.y);
 
+	App->renderer->camera.x -= 2 * facingH;
+	App->renderer->camera.y += 2 * facingV;
+
 	//If there's movement, animate. If not, static image.
 	if (facingH != 0 || facingV != 0){
 		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
