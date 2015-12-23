@@ -8,8 +8,6 @@
 using namespace tinyxml2;
 using namespace std;
 
-#define WALL 575
-
 ModuleMap::ModuleMap(){
 
 	//Creates the walls presets
@@ -33,6 +31,8 @@ ModuleMap::ModuleMap(){
 	wallPreset[WALLDIRECTION_UP_DOWN_LEFT] = { (5 * 18) + 1, (13 * 18) + 1, dim, dim };
 	wallPreset[WALLDIRECTION_DOWN_LEFT_RIGHT] = { (6 * 18) + 1, (13 * 18) + 1, dim, dim };
 	wallPreset[WALLDIRECTION_UP_DOWN_LEFT_RIGHT] = { (7 * 18) + 1, (13 * 18) + 1, dim, dim };
+
+	floorPreset = { (16 * 18) + 1, (12 * 18) + 1, dim, dim };
 }
 
 ModuleMap::~ModuleMap(){
@@ -69,14 +69,18 @@ bool ModuleMap::Start(){
 	int x, y, direction;
 	for (i = 0; i < worldValues.size(); i++){
 
-		//If its a wall
-		if (worldValues[i] == WALL){
+		//Gets X and Y
+		x = (i % width);
+		y = (i / width);
+		
+		if (x == 1 && y == 1){
+			LOG("%i", worldValues[i]);
+		}
 
+		switch (worldValues[i])
+		{
+		case WALL: {
 			Wall* wall = new Wall();
-
-			//Gets X and Y
-			x = (i % width);
-			y = (i / width);
 			direction = 0;
 
 			//Checks if there is another wall or border in every direction
@@ -92,15 +96,28 @@ bool ModuleMap::Start(){
 			if (x + 1 == width || worldValues[(y*width) + x + 1] == 575)
 				direction += WALLDIRECTION_RIGHT;
 
-
-			wall->x = x * 16;
-			wall->y = y * 16;
+			//Creates the wall
+			wall->position.x = x * 16;
+			wall->position.y = y * 16;
 			wall->direction = static_cast<WallDirection>(direction);
 
 			walls.push_back(wall);
+
+			break; }
+
+		case FLOOR:
+			floor.push_back(new iPoint(x * 16, y * 16));
+			break;
+
+		case CHEST:
+			collectibles.push_back(CreateCollectible(COLLECTIBLE_TREASURE, {x*16,y*16}));
+			break;
+
+
+		default:
+			break;
 		}
 	}
-
 
 	return true;
 }
@@ -109,8 +126,37 @@ update_status ModuleMap::Update(){
 	
 	for (int i = 0; i < walls.size(); i++)
 	{
-		App->renderer->Blit(graphics, walls[i]->x, walls[i]->y, &wallPreset[walls[i]->direction], 1.0f);
+		App->renderer->Blit(graphics, walls[i]->position.x, walls[i]->position.y, &wallPreset[walls[i]->direction], 1.0f);
+	}
+
+	for (int i = 0; i < floor.size(); i++){
+		App->renderer->Blit(graphics, floor[i]->x, floor[i]->y, &floorPreset, 1.0f);
+	}
+
+	for (int i = 0; i < collectibles.size(); i++)
+	{
+		collectibles[i]->Update();
 	}
 
 	return UPDATE_CONTINUE;
+}
+
+ModuleCollectible* ModuleMap::CreateCollectible(TypeCollectible type, iPoint position){
+	ModuleCollectible* collectible = new ModuleCollectible(type);
+
+	Animation animation;
+	int dim = 18 - 2;
+
+	if (type == COLLECTIBLE_TREASURE){
+		animation.frames.push_back({ (21 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation.frames.push_back({ (22 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation.frames.push_back({ (23 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation.speed = 0.1f;
+	}
+
+	collectible->animation = animation;
+	collectible->position = position;
+	collectible->graphics = this->graphics;
+
+	return collectible;
 }
