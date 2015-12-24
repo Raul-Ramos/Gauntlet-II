@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
+#include "ModuleCollisions.h"
 #include <sstream>
 
 using namespace tinyxml2;
@@ -200,6 +201,7 @@ ModuleCollectible* ModuleMap::CreateCollectible(TypeCollectible type, iPoint pos
 	collectible->animation = animation;
 	collectible->position = position;
 	collectible->graphics = this->graphics;
+	collectible->collider = App->collisions->AddCollider(COLLIDER_COLLECTIBLE, { position.x, position.y, 16, 16 }, collectible);
 
 	return collectible;
 }

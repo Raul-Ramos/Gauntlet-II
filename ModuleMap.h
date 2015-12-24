@@ -61,6 +61,11 @@ public:
 	bool Start();
 	update_status Update();
 
+	//Elements in the map
+	vector<Wall*> walls;
+	vector<iPoint*> floor;
+	vector<ModuleCollectible*> collectibles;
+
 private:
 	//Map properties
 	int width;
@@ -68,11 +73,6 @@ private:
 
 	//Graphics
 	SDL_Texture* graphics = nullptr;
-
-	//Elements in the map
-	vector<Wall*> walls;
-	vector<iPoint*> floor;
-	vector<ModuleCollectible*> collectibles;
 
 	//Images prepared for rendering
 	SDL_Rect wallPreset[16];

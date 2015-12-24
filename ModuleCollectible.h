@@ -26,10 +26,10 @@ public:
 
 	update_status Update();
 	bool CleanUp();
+	void OnCollision(Collider* c1, Collider* c2);
 
 	SDL_Texture* graphics = nullptr;
 	iPoint position;
-
 	Animation animation;
 	Collider* collider;
 

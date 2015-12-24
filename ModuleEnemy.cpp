@@ -48,7 +48,7 @@ bool ModuleEnemy::Start()
 	LOG("Loading player");
 
 	graphics = App->textures->Load("gauntlet2.png");
-	collider = App->collisions->AddCollider(ENEMY, { position.x, position.y, 18, 18 }, this);
+	collider = App->collisions->AddCollider(COLLIDER_ENEMY, { position.x, position.y, 16, 16 }, this);
 
 	return true;
 }

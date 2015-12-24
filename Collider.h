@@ -8,12 +8,13 @@
 //None is the last one so you can get
 //the valid types with None - 1
 enum COLLIDER_TYPE {
-	WALL = 0,
-	PLAYER,
-	ENEMY,
-	PLAYER_PROJECTILE,
+	COLLIDER_WALL = 0,
+	COLLIDER_PLAYER,
+	COLLIDER_ENEMY,
+	COLLIDER_PLAYER_PROJECTILE,
+	COLLIDER_COLLECTIBLE,
 
-	NONE
+	COLLIDER_NONE
 };
 
 //Class used

@@ -21,7 +21,7 @@ public:
 private:
 
 	std::vector<Collider*> colliders;
-	bool matrix[NONE - 1][NONE - 1];
+	bool matrix[COLLIDER_NONE - 1][COLLIDER_NONE - 1];
 };
 
 #endif // __MODULE_COLLISIONS_H__
