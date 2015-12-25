@@ -1,4 +1,6 @@
 #include "ModuleParticles.h"
+#include "Application.h"
+#include "ModuleTextures.h"
 #include "SDL/include/SDL.h"
 
 ModuleParticles::ModuleParticles()
@@ -6,9 +8,17 @@ ModuleParticles::ModuleParticles()
 }
 
 ModuleParticles::~ModuleParticles(){
+	for (vector<Particle*>::iterator it = particles.begin(); it != particles.end(); ++it)
+		RELEASE(*it);
+
+	particles.clear();
 }
 
 bool ModuleParticles::CleanUp(){
+	for (int i = 0; i < particles.size(); i++)
+	{
+		App->textures->Unload(particles[i]->graphics);
+	}
 	return true;
 }
 
@@ -33,6 +43,7 @@ update_status ModuleParticles::PostUpdate(){
 	std::vector<std::string>::size_type i = 0;
 	while (i < particles.size()) {
 		if (particles[i]->isMarkedForDead()) {
+			delete particles[i];
 			particles.erase(particles.begin() + i);
 		}
 		else {

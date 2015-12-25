@@ -6,7 +6,7 @@
 
 //Collider identification types
 //None is the last one so you can get
-//the valid types with None - 1
+//the valid types with None
 enum COLLIDER_TYPE {
 	COLLIDER_WALL = 0,
 	COLLIDER_PLAYER,
@@ -20,6 +20,9 @@ enum COLLIDER_TYPE {
 //Class used
 struct Collider
 {
+	~Collider(){
+	};
+
 	COLLIDER_TYPE type;
 	SDL_Rect box;
 	Module* father;

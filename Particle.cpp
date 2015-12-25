@@ -8,6 +8,9 @@ Particle::Particle(){
 	begun = SDL_GetTicks();
 }
 
+Particle::~Particle(){
+}
+
 void Particle::MarkForDead(){
 	toDelete = true;
 	collider->toDelete = true;

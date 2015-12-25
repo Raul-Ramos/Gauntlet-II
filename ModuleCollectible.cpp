@@ -3,8 +3,8 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
-#include "ModuleMap.h"
 #include "ModulePlayer.h"
+#include "Animation.h"
 
 ModuleCollectible::ModuleCollectible(TypeCollectible type) : Module(), type(type)
 {
@@ -12,18 +12,20 @@ ModuleCollectible::ModuleCollectible(TypeCollectible type) : Module(), type(type
 
 ModuleCollectible::~ModuleCollectible()
 {
+	delete animation;
 }
 
 // Unload assets
 bool ModuleCollectible::CleanUp()
 {
+	App->textures->Unload(graphics);
 	return true;
 }
 
 // Update
 update_status ModuleCollectible::Update()
 {
-	App->renderer->Blit(graphics, position.x, position.y, &(animation.GetCurrentAnimatedFrame()), 1.0f);
+	App->renderer->Blit(graphics, position.x, position.y, &(animation->GetCurrentAnimatedFrame()), 1.0f);
 	return UPDATE_CONTINUE;
 }
 
@@ -57,16 +59,7 @@ void ModuleCollectible::OnCollision(Collider* col1, Collider* col2){
 
 		//Deletion
 		col1->toDelete = true;
-		
-		ModuleMap* map = App->map;
-		for (int i = 0; i < map->collectibles.size(); i++)
-		{
-			if (map->collectibles[i] == this){
-				map->floor.push_back(&position);
-				map->collectibles.erase(map->collectibles.begin() + i);
-				break;
-			}
-		}
+		toDelete = true;
 		//End Deletion
 	}
 }

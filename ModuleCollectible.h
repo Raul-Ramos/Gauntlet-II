@@ -4,10 +4,10 @@
 #include "Globals.h"
 #include "Module.h"
 #include "Point.h"
-#include "Animation.h"
 
 struct SDL_Texture;
 struct Collider;
+struct Animation;
 
 enum TypeCollectible{
 	COLLECTIBLE_TREASURE,
@@ -28,9 +28,10 @@ public:
 	bool CleanUp();
 	void OnCollision(Collider* c1, Collider* c2);
 
+	bool toDelete = false;
 	SDL_Texture* graphics = nullptr;
 	iPoint position;
-	Animation animation;
+	Animation* animation;
 	Collider* collider;
 
 private:

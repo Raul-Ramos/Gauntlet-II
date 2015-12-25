@@ -1,5 +1,7 @@
 #include "ModuleCollisions.h"
 
+using namespace std;
+
 ModuleCollisions::ModuleCollisions()
 {
 	//Valid collision array
@@ -24,16 +26,21 @@ ModuleCollisions::ModuleCollisions()
 	matrix[COLLIDER_COLLECTIBLE][COLLIDER_COLLECTIBLE] = false;
 
 	//Fills the other half of the array
-	for (int y = 1; y < COLLIDER_NONE - 1; y++){
+	for (int y = 1; y < COLLIDER_NONE; y++){
 		for (int x = 0; x < y; x++){
-			matrix[x][y] = matrix[y][x];
+			matrix[y][x] = matrix[x][y];
 		}
 	}
 }
 
 // Destructor
 ModuleCollisions::~ModuleCollisions()
-{}
+{
+	for (vector<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
+		RELEASE(*it);
+	colliders.clear();
+
+}
 
 // Called before render is available
 update_status ModuleCollisions::Update()
@@ -72,6 +79,7 @@ update_status ModuleCollisions::PostUpdate(){
 	std::vector<std::string>::size_type i = 0;
 	while (i < colliders.size()) {
 		if (colliders[i]->toDelete) {
+			delete colliders[i];
 			colliders.erase(colliders.begin() + i);
 		}
 		else {
@@ -85,7 +93,6 @@ update_status ModuleCollisions::PostUpdate(){
 // Called before quitting
 bool ModuleCollisions::CleanUp()
 {
-	colliders.clear();
 	return true;
 }
 

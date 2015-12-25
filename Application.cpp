@@ -29,7 +29,7 @@ Application::Application()
 
 	// Game Modules
 	modules.push_back(player = new ModulePlayer(false));
-	modules.push_back(enemy = new ModuleEnemy(true));
+	modules.push_back(enemy = new ModuleEnemy());
 	modules.push_back(fade = new ModuleFadeToBlack());
 }
 
@@ -53,8 +53,6 @@ bool Application::Init()
 	}
 
 	player->Enable();
-
-	ModuleMap* map = new ModuleMap(); //TODO: Delete
 
 	return ret;
 }

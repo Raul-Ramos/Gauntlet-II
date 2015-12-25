@@ -13,7 +13,7 @@ struct SDL_Texture;
 class ModuleEnemy : public Module
 {
 public:
-	ModuleEnemy(bool start_enabled = true);
+	ModuleEnemy();
 	~ModuleEnemy();
 
 	bool Start();

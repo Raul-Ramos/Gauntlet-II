@@ -60,6 +60,8 @@ public:
 
 	bool Start();
 	update_status Update();
+	update_status PostUpdate();
+	bool CleanUp();
 
 	//Elements in the map
 	vector<Wall*> walls;
@@ -79,7 +81,7 @@ private:
 	SDL_Rect floorPreset;
 
 	//Collectible factory
-	ModuleCollectible* CreateCollectible(TypeCollectible type, iPoint position);
+	ModuleCollectible* CreateCollectible(const TypeCollectible type, const iPoint position);
 
 };
 

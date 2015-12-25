@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
+#include "Animation.h"
 #include <sstream>
 
 using namespace tinyxml2;
@@ -37,6 +38,28 @@ ModuleMap::ModuleMap(){
 }
 
 ModuleMap::~ModuleMap(){
+
+	for (vector<Wall*>::iterator it = walls.begin(); it != walls.end(); ++it)
+		RELEASE(*it);
+	walls.clear();
+
+	for (vector<iPoint*>::iterator it = floor.begin(); it != floor.end(); ++it)
+		RELEASE(*it);
+	floor.clear();
+
+	for (vector<ModuleCollectible*>::iterator it = collectibles.begin(); it != collectibles.end(); ++it)
+		RELEASE(*it);
+	collectibles.clear();
+
+}
+
+bool ModuleMap::CleanUp(){
+	for (int i = 0; i < collectibles.size(); i++)
+	{
+		collectibles[i]->CleanUp();
+	}
+
+	return true;
 }
 
 bool ModuleMap::Start(){
@@ -77,6 +100,7 @@ bool ModuleMap::Start(){
 		switch (worldValues[i])
 		{
 		case WALL: {
+
 			Wall* wall = new Wall();
 			direction = 0;
 
@@ -160,39 +184,58 @@ update_status ModuleMap::Update(){
 	return UPDATE_CONTINUE;
 }
 
-ModuleCollectible* ModuleMap::CreateCollectible(TypeCollectible type, iPoint position){
+update_status ModuleMap::PostUpdate(){
+
+	std::vector<std::string>::size_type i = 0;
+	while (i < collectibles.size()) {
+		if (collectibles[i]->toDelete) {
+
+			floor.push_back(new iPoint{ collectibles[i]->position.x, collectibles[i]->position.y });
+			delete collectibles[i];
+			collectibles.erase(collectibles.begin() + i);
+
+		}
+		else {
+			++i;
+		}
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+ModuleCollectible* ModuleMap::CreateCollectible(const TypeCollectible type, const iPoint position){
 	ModuleCollectible* collectible = new ModuleCollectible(type);
 
-	Animation animation;
+	Animation* animation = new Animation();
 	int dim = 18 - 2;
 
 	switch (type)
 	{
 	case COLLECTIBLE_TREASURE:
-		animation.frames.push_back({ (21 * 18) + 1, (6 * 18) + 1, dim, dim });
-		animation.frames.push_back({ (22 * 18) + 1, (6 * 18) + 1, dim, dim });
-		animation.frames.push_back({ (23 * 18) + 1, (6 * 18) + 1, dim, dim });
-		animation.speed = 0.1f;
+		animation->frames.push_back({ (21 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation->frames.push_back({ (22 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation->frames.push_back({ (23 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation->speed = 0.1f;
 		break;
 	case COLLECTIBLE_MEAT:
-		animation.frames.push_back({ (16 * 18) + 1, (6 * 18) + 1, dim, dim });
-		animation.speed = 0.0f;
+		animation->frames.push_back({ (16 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation->speed = 0.0f;
 		break;
 	case COLLECTIBLE_DRINK:
-		animation.frames.push_back({ (13 * 18) + 1, (6 * 18) + 1, dim, dim });
-		animation.speed = 0.0f;
+		animation->frames.push_back({ (13 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation->speed = 0.0f;
 		break;
 	case COLLECTIBLE_KEY:
-		animation.frames.push_back({ (19 * 18) + 1, (6 * 18) + 1, dim, dim });
-		animation.speed = 0.0f;
+		animation->frames.push_back({ (19 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation->speed = 0.0f;
 		break;
 	case COLLECTIBLE_EXIT:
-		animation.frames.push_back({ (0 * 18) + 1, (6 * 18) + 1, dim, dim });
-		animation.speed = 0.0f;
+		animation->frames.push_back({ (0 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation->speed = 0.0f;
 		break;
 	case COLLECTIBLE_EXIT_TO_6:
-		animation.frames.push_back({ (1 * 18) + 1, (6 * 18) + 1, dim, dim });
-		animation.speed = 0.0f;
+		animation->frames.push_back({ (1 * 18) + 1, (6 * 18) + 1, dim, dim });
+		animation->speed = 0.0f;
 		break;
 	default:
 		break;
