@@ -53,8 +53,14 @@ struct Wall {
 	iPoint position;
 };
 
-struct Door : Wall {
+struct Door : Module {
 	int groupID;
+	WallDirection direction;
+	iPoint position;
+	Collider* collider;
+	bool toDelete = false;
+
+	void OnCollision(Collider* col1, Collider* col2);
 };
 
 class ModuleMap : public Module

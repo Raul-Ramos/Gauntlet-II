@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
+#include "ModulePlayer.h"
 #include "Animation.h"
 #include <sstream>
 
@@ -84,6 +85,70 @@ bool ModuleMap::CleanUp(){
 	return true;
 }
 
+update_status ModuleMap::Update(){
+	
+	//Renders the walls
+	for (int i = 0; i < walls.size(); i++)
+	{
+		App->renderer->Blit(graphics, walls[i]->position.x, walls[i]->position.y, &wallPreset[walls[i]->direction], 1.0f);
+	}
+
+	//Renders the floor
+	for (int i = 0; i < floor.size(); i++){
+		App->renderer->Blit(graphics, floor[i]->x, floor[i]->y, &floorPreset, 1.0f);
+	}
+
+	//Renders the doors
+	for (int i = 0; i < doors.size(); i++){
+		App->renderer->Blit(graphics, doors[i]->position.x, doors[i]->position.y, &doorPreset[doors[i]->direction], 1.0f);
+	}
+
+	//Renders the collectibles
+	for (int i = 0; i < collectibles.size(); i++)
+	{
+		collectibles[i]->Update();
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleMap::PostUpdate(){
+
+	//Deletes collectibles marked to it
+	vector<string>::size_type i = 0;
+	while (i < collectibles.size()) {
+		if (collectibles[i]->toDelete) {
+
+			floor.push_back(new iPoint{ collectibles[i]->position.x, collectibles[i]->position.y });
+			delete collectibles[i];
+			collectibles.erase(collectibles.begin() + i);
+
+		}
+		else {
+			++i;
+		}
+	}
+
+	//Deletes doors marked to it
+	i = 0;
+	while (i < doors.size()) {
+		if (doors[i]->toDelete) {
+
+			floor.push_back(new iPoint{ doors[i]->position.x, doors[i]->position.y });
+			delete doors[i];
+			doors.erase(doors.begin() + i);
+
+		}
+		else {
+			++i;
+		}
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+/////////////////////////// MAP CREATION ///////////////////////////
+
 bool ModuleMap::Start(){
 
 	///////////////////// XML READING /////////////////////
@@ -158,7 +223,7 @@ bool ModuleMap::Start(){
 
 			//Searches for the door other positions and
 			//gets them under the same group ID
-			vector<iPoint> openPositions = {{x,y}};
+			vector<iPoint> openPositions = { { x, y } };
 			iPoint it; //Iterator
 			int newPosition;
 
@@ -208,19 +273,20 @@ bool ModuleMap::Start(){
 				door->position.y = it.y * 16;
 				door->direction = static_cast<WallDirection>(direction);
 				door->groupID = doorGroupId;
+				door->collider = App->collisions->AddCollider(COLLIDER_WALL, { it.x * 16, it.y * 16, 16, 16 }, door);
 
 				doors.push_back(door);
-				
+
 			}
 
 			//Increases the door group id for the next door
 			doorGroupId++;
-			
+
 			break;
 			}
 
 		case CHEST:
-			collectibles.push_back(CreateCollectible(COLLECTIBLE_TREASURE, {x*16,y*16}));
+			collectibles.push_back(CreateCollectible(COLLECTIBLE_TREASURE, { x * 16, y * 16 }));
 			break;
 
 		case MEAT:
@@ -249,53 +315,6 @@ bool ModuleMap::Start(){
 	}
 
 	return true;
-}
-
-update_status ModuleMap::Update(){
-	
-	//Renders the walls
-	for (int i = 0; i < walls.size(); i++)
-	{
-		App->renderer->Blit(graphics, walls[i]->position.x, walls[i]->position.y, &wallPreset[walls[i]->direction], 1.0f);
-	}
-
-	//Renders the floor
-	for (int i = 0; i < floor.size(); i++){
-		App->renderer->Blit(graphics, floor[i]->x, floor[i]->y, &floorPreset, 1.0f);
-	}
-
-	//Renders the doors
-	for (int i = 0; i < doors.size(); i++){
-		App->renderer->Blit(graphics, doors[i]->position.x, doors[i]->position.y, &doorPreset[doors[i]->direction], 1.0f);
-	}
-
-	//Renders the collectibles
-	for (int i = 0; i < collectibles.size(); i++)
-	{
-		collectibles[i]->Update();
-	}
-
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleMap::PostUpdate(){
-
-	//Deletes collectibles marked to it
-	std::vector<std::string>::size_type i = 0;
-	while (i < collectibles.size()) {
-		if (collectibles[i]->toDelete) {
-
-			floor.push_back(new iPoint{ collectibles[i]->position.x, collectibles[i]->position.y });
-			delete collectibles[i];
-			collectibles.erase(collectibles.begin() + i);
-
-		}
-		else {
-			++i;
-		}
-	}
-
-	return UPDATE_CONTINUE;
 }
 
 //Creates a collectible
@@ -343,4 +362,25 @@ ModuleCollectible* ModuleMap::CreateCollectible(const TypeCollectible type, cons
 	collectible->collider = App->collisions->AddCollider(COLLIDER_COLLECTIBLE, { position.x, position.y, 16, 16 }, collectible);
 
 	return collectible;
+}
+
+///////////////////// DOORS /////////////////////
+//When a player tries to open a door
+void Door::OnCollision(Collider* col1, Collider* col2){
+
+	if (col2->type == COLLIDER_PLAYER){
+		//If the player has keys
+		//Gets rid of one of them and marks the door pieces in his
+		//group to be deleted by the module map
+		if (App->player->numKeys > 0){
+			App->player->numKeys--;
+
+			for (int i = 0; i < App->map->doors.size(); i++){
+				if (App->map->doors[i]->groupID == this->groupID){
+					App->map->doors[i]->toDelete = true;
+					App->map->doors[i]->collider->toDelete = true;
+				}
+			}
+		}
+	}
 }
