@@ -61,6 +61,12 @@ struct Door : Wall {
 	void OnCollision(Collider* col1, Collider* col2);
 };
 
+struct ModuleFloorTrigger : Module {
+	int Id;
+	vector<Wall*> walls;
+	vector<ModuleCollectible*> triggers;
+};
+
 class ModuleMap : public Module
 {
 public:
@@ -76,6 +82,7 @@ public:
 	vector<Wall*> walls;
 	vector<iPoint*> floor;
 	vector<Door*> doors;
+	vector<ModuleFloorTrigger*> floorTriggers;
 	vector<ModuleCollectible*> collectibles;
 
 private:
@@ -93,6 +100,7 @@ private:
 
 	//Collectible factory
 	ModuleCollectible* CreateCollectible(const TypeCollectible type, const iPoint position);
+	ModuleFloorTrigger* FindFloorTriggerGroup(const int id);
 
 };
 

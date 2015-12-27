@@ -23,6 +23,8 @@ public:
 	void OnCollision(Collider* c1, Collider* c2);
 
 public:
+	int attackKey;
+
 	int speed = 1;
 	int score = 0;
 	int health = 0;

@@ -11,6 +11,8 @@
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 {
+	attackKey = SDL_SCANCODE_Q;
+
 	position.x = 0;
 	position.y = 0;
 
@@ -91,7 +93,7 @@ update_status ModulePlayer::PreUpdate()
 	else if (facingH < 0) { facing = LEFT; }
 
 	//Shoot projectile. You can't move while attacking
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT){
+	if (App->input->GetKey(attackKey) == KEY_REPEAT){
 
 		//If the shoot cooldown is over
 		if (actualShootCooldown > shootCooldown){
@@ -124,6 +126,9 @@ update_status ModulePlayer::PreUpdate()
 
 update_status ModulePlayer::Update(){
 
+	//Whatever you're animated or not
+	bool move = false;
+
 	//If you can move in that direction because the collider didn't correct himself
 	if (collider->box.x != position.x || collider->box.y != position.y) {
 		
@@ -138,14 +143,19 @@ update_status ModulePlayer::Update(){
 		App->renderer->camera.y -= difference.y * 2;
 
 		//There's movement. Animate.
-		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
-
-	} else {
-
-		//There's no movement. Static image
-		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentFrame()), 1.0f);
+		move = true;
 
 	}
+	//If you don't move but you're attacking, you're still animated
+	else if (App->input->GetKey(attackKey) == KEY_REPEAT){
+		move = true;
+	}
+
+	if (move)
+		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
+	else
+		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentFrame()), 1.0f);
+
 
 	return UPDATE_CONTINUE;
 }

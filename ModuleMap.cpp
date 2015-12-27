@@ -66,6 +66,10 @@ ModuleMap::~ModuleMap(){
 		RELEASE(*it);
 	floor.clear();
 
+	for (vector<ModuleFloorTrigger*>::iterator it = floorTriggers.begin(); it != floorTriggers.end(); ++it)
+		RELEASE(*it);
+	floorTriggers.clear();
+
 	for (vector<Door*>::iterator it = doors.begin(); it != doors.end(); ++it)
 		RELEASE(*it);
 	doors.clear();
@@ -173,6 +177,18 @@ bool ModuleMap::Start(){
 			ss.ignore();
 	}
 
+	vector<int> doorValues;
+	stringstream ss2(doc.FirstChildElement("level")->FirstChildElement("Doors")->GetText());
+
+	int z;
+	while (ss2 >> z)
+	{
+		doorValues.push_back(z);
+
+		if (ss2.peek() == ',')
+			ss2.ignore();
+	}
+
 	//Gets the player position
 	App->player->position.x = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("x"));
 	App->player->position.y = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("y"));
@@ -218,10 +234,37 @@ bool ModuleMap::Start(){
 
 			walls.push_back(wall);
 
+			//If the wall is a door opened by a floor trigger
+			if (doorValues[i] != -1){
+
+				//Search for the trigger group and add the wall to it
+				ModuleFloorTrigger* group = FindFloorTriggerGroup(doorValues[i]);
+				group->walls.push_back(wall);
+
+			}
+
 			break; }
 
 		case FLOOR:
-			floor.push_back(new iPoint(x * 16, y * 16));
+
+			if (doorValues[i] == -1){
+
+				//If its a regular floor tile
+				floor.push_back(new iPoint(x * 16, y * 16));
+
+			} else {
+
+				//If it's a floor trigger
+				//Search for the trigger group
+				ModuleFloorTrigger* group = FindFloorTriggerGroup(doorValues[i]);
+
+				//Add the trigger to the group
+				ModuleCollectible* trigger = CreateCollectible(COLLECTIBLE_FLOOR_TRIGGER, { x * 16, y * 16 });
+				group->triggers.push_back(trigger);
+				collectibles.push_back(trigger);
+			
+			}
+
 			break;
 
 		case DOOR: {
@@ -324,6 +367,7 @@ bool ModuleMap::Start(){
 
 //Creates a collectible
 ModuleCollectible* ModuleMap::CreateCollectible(const TypeCollectible type, const iPoint position){
+
 	ModuleCollectible* collectible = new ModuleCollectible(type);
 
 	Animation* animation = new Animation();
@@ -349,6 +393,13 @@ ModuleCollectible* ModuleMap::CreateCollectible(const TypeCollectible type, cons
 		animation->frames.push_back({ (19 * 18) + 1, (6 * 18) + 1, dim, dim });
 		animation->speed = 0.0f;
 		break;
+	case COLLECTIBLE_FLOOR_TRIGGER:
+		animation->frames.push_back({ (16 * 18) + 1, (12 * 18) + 1, dim, dim });
+		animation->frames.push_back({ (26 * 18) + 1, (12 * 18) + 1, dim, dim });
+		animation->frames.push_back({ (16 * 18) + 1, (12 * 18) + 1, dim, dim });
+		animation->frames.push_back({ (28 * 18) + 1, (12 * 18) + 1, dim, dim });
+		animation->speed = 0.07f;
+		break;
 	case COLLECTIBLE_EXIT:
 		animation->frames.push_back({ (0 * 18) + 1, (6 * 18) + 1, dim, dim });
 		animation->speed = 0.0f;
@@ -367,6 +418,30 @@ ModuleCollectible* ModuleMap::CreateCollectible(const TypeCollectible type, cons
 	collectible->collider = App->collisions->AddCollider(COLLIDER_COLLECTIBLE, { position.x, position.y, 16, 16 }, collectible);
 
 	return collectible;
+}
+
+//Finds a floor trigger group
+ModuleFloorTrigger* ModuleMap::FindFloorTriggerGroup(const int id){
+
+	//Search for the trigger group by Id
+	ModuleFloorTrigger* found = nullptr;
+
+	for (int z = 0; z < floorTriggers.size(); z++)
+	{
+		if (floorTriggers[z]->Id == id){
+			found = floorTriggers[z];
+			break;
+		}
+	}
+
+	//If its not found, create it
+	if (found == nullptr){
+		found = new ModuleFloorTrigger();
+		found->Id = id;
+		floorTriggers.push_back(found);
+	}
+
+	return found;
 }
 
 ///////////////////// DOORS /////////////////////

@@ -14,6 +14,7 @@ enum TypeCollectible{
 	COLLECTIBLE_MEAT,
 	COLLECTIBLE_DRINK,
 	COLLECTIBLE_KEY,
+	COLLECTIBLE_FLOOR_TRIGGER,
 	COLLECTIBLE_EXIT,
 	COLLECTIBLE_EXIT_TO_6,
 };
@@ -36,6 +37,8 @@ public:
 
 private:
 	TypeCollectible type;
+
+	void floorTriggerFunction();
 
 };
 
