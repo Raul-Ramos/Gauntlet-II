@@ -22,6 +22,9 @@ public:
 	void OnCollision(Collider* c1, Collider* c2);
 
 public:
+	int score = 0;
+	int health = 0;
+	int numKeys = 0;
 
 	SDL_Texture* graphics = nullptr;
 	iPoint position;

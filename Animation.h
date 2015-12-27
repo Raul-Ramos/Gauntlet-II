@@ -16,6 +16,10 @@ public:
 	Animation() : frames(), speed(1.0f), current_frame(0.0f)
 	{}
 
+	~Animation(){
+		frames.clear();
+	}
+
 	SDL_Rect& GetCurrentAnimatedFrame()
 	{
 		current_frame += speed;

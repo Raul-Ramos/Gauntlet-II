@@ -12,6 +12,8 @@ struct SDL_Texture;
 struct Particle
 {
 	Particle();
+	~Particle();
+
 	void MarkForDead();
 	bool isMarkedForDead() const;
 

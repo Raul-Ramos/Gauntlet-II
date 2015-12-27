@@ -1,33 +1,46 @@
 #include "ModuleCollisions.h"
 
+using namespace std;
+
 ModuleCollisions::ModuleCollisions()
 {
 	//Valid collision array
-	matrix[WALL][WALL] = false;
-	matrix[WALL][PLAYER] = true;
-	matrix[WALL][ENEMY] = true;
-	matrix[WALL][PLAYER_PROJECTILE] = true;
+	matrix[COLLIDER_WALL][COLLIDER_WALL] = false;
+	matrix[COLLIDER_WALL][COLLIDER_PLAYER] = true;
+	matrix[COLLIDER_WALL][COLLIDER_ENEMY] = true;
+	matrix[COLLIDER_WALL][COLLIDER_PLAYER_PROJECTILE] = true;
+	matrix[COLLIDER_WALL][COLLIDER_COLLECTIBLE] = false;
 
-	matrix[PLAYER][PLAYER] = false;
-	matrix[PLAYER][ENEMY] = true;
-	matrix[PLAYER][PLAYER_PROJECTILE] = false;
+	matrix[COLLIDER_PLAYER][COLLIDER_PLAYER] = false;
+	matrix[COLLIDER_PLAYER][COLLIDER_ENEMY] = true;
+	matrix[COLLIDER_PLAYER][COLLIDER_PLAYER_PROJECTILE] = false;
+	matrix[COLLIDER_PLAYER][COLLIDER_COLLECTIBLE] = true;
 
-	matrix[ENEMY][ENEMY] = true;
-	matrix[ENEMY][PLAYER_PROJECTILE] = true;
+	matrix[COLLIDER_ENEMY][COLLIDER_ENEMY] = true;
+	matrix[COLLIDER_ENEMY][COLLIDER_PLAYER_PROJECTILE] = true;
+	matrix[COLLIDER_ENEMY][COLLIDER_COLLECTIBLE] = true;
 
-	matrix[PLAYER_PROJECTILE][PLAYER_PROJECTILE] = false;
+	matrix[COLLIDER_PLAYER_PROJECTILE][COLLIDER_PLAYER_PROJECTILE] = false;
+	matrix[COLLIDER_PLAYER_PROJECTILE][COLLIDER_COLLECTIBLE] = true;
+
+	matrix[COLLIDER_COLLECTIBLE][COLLIDER_COLLECTIBLE] = false;
 
 	//Fills the other half of the array
-	for (int y = 1; y < NONE - 1; y++){
+	for (int y = 1; y < COLLIDER_NONE; y++){
 		for (int x = 0; x < y; x++){
-			matrix[x][y] = matrix[y][x];
+			matrix[y][x] = matrix[x][y];
 		}
 	}
 }
 
 // Destructor
 ModuleCollisions::~ModuleCollisions()
-{}
+{
+	for (vector<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
+		RELEASE(*it);
+	colliders.clear();
+
+}
 
 // Called before render is available
 update_status ModuleCollisions::Update()
@@ -66,6 +79,7 @@ update_status ModuleCollisions::PostUpdate(){
 	std::vector<std::string>::size_type i = 0;
 	while (i < colliders.size()) {
 		if (colliders[i]->toDelete) {
+			delete colliders[i];
 			colliders.erase(colliders.begin() + i);
 		}
 		else {
@@ -79,7 +93,6 @@ update_status ModuleCollisions::PostUpdate(){
 // Called before quitting
 bool ModuleCollisions::CleanUp()
 {
-	colliders.clear();
 	return true;
 }
 

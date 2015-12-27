@@ -44,7 +44,6 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 
 ModulePlayer::~ModulePlayer()
 {
-	// Homework : check for memory leaks
 }
 
 // Load assets
@@ -53,7 +52,7 @@ bool ModulePlayer::Start()
 	LOG("Loading player");
 
 	graphics = App->textures->Load("gauntlet2.png");
-	collider = App->collisions->AddCollider(PLAYER, { position.x, position.y, 18, 18 }, this);
+	collider = App->collisions->AddCollider(COLLIDER_PLAYER, { position.x, position.y, 16, 16 }, this);
 
 	return true;
 }
@@ -100,6 +99,9 @@ update_status ModulePlayer::Update()
 	position.y -= 1 * facingV;
 	collider->setPos(position.x, position.y);
 
+	App->renderer->camera.x -= 2 * facingH;
+	App->renderer->camera.y += 2 * facingV;
+
 	//If there's movement, animate. If not, static image.
 	if (facingH != 0 || facingV != 0){
 		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
@@ -115,7 +117,7 @@ update_status ModulePlayer::Update()
 		Particle* particle = new Particle();
 		particle->facing = facing;
 		particle->graphics = graphics;
-		particle->collider = App->collisions->AddCollider(PLAYER_PROJECTILE, { position.x, position.y, 18, 18 });
+		particle->collider = App->collisions->AddCollider(COLLIDER_PLAYER_PROJECTILE, { position.x, position.y, 16, 16 });
 		particle->position = { position.x, position.y };
 		particle->duration = 10000;
 
@@ -152,7 +154,7 @@ update_status ModulePlayer::Update()
 }
 
 void ModulePlayer::OnCollision(Collider* col1, Collider* col2){
-	if (col2->type == ENEMY){
+	if (col2->type == COLLIDER_ENEMY){
 		LOG("UUUGH! Collision!");
 	}
 }

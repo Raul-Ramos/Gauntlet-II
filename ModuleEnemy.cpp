@@ -8,7 +8,7 @@
 
 //TODO: A lot of things in common between ModulePlayer and ModuleEnemy. Inheritance?
 
-ModuleEnemy::ModuleEnemy(bool start_enabled) : Module(start_enabled)
+ModuleEnemy::ModuleEnemy() : Module()
 {
 	position.x = 50;
 	position.y = 50;
@@ -48,7 +48,7 @@ bool ModuleEnemy::Start()
 	LOG("Loading player");
 
 	graphics = App->textures->Load("gauntlet2.png");
-	collider = App->collisions->AddCollider(ENEMY, { position.x, position.y, 18, 18 }, this);
+	collider = App->collisions->AddCollider(COLLIDER_ENEMY, { position.x, position.y, 16, 16 }, this);
 
 	return true;
 }
@@ -56,7 +56,7 @@ bool ModuleEnemy::Start()
 // Unload assets
 bool ModuleEnemy::CleanUp()
 {
-	LOG("Unloading player");
+	LOG("Unloading enemy");
 
 	App->textures->Unload(graphics);
 
