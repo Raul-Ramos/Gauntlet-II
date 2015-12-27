@@ -48,16 +48,14 @@ enum WallDirection{
 	
 };
 
-struct Wall {
-	WallDirection direction;
-	iPoint position;
-};
-
-struct Door : Module {
-	int groupID;
+struct Wall : Module {
 	WallDirection direction;
 	iPoint position;
 	Collider* collider;
+};
+
+struct Door : Wall {
+	int groupID;
 	bool toDelete = false;
 
 	void OnCollision(Collider* col1, Collider* col2);

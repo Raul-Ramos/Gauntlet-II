@@ -10,7 +10,7 @@
 
 ModuleEnemy::ModuleEnemy() : Module()
 {
-	position.x = 50;
+	position.x = 100;
 	position.y = 50;
 
 	// Reads the animations out of the spritesheet

@@ -68,7 +68,7 @@ bool ModulePlayer::CleanUp()
 }
 
 // Update
-update_status ModulePlayer::Update()
+update_status ModulePlayer::PreUpdate()
 {
 	int facingH = 0;
 	int facingV = 0;
@@ -93,22 +93,10 @@ update_status ModulePlayer::Update()
 	else if (facingH > 0) { facing = RIGHT; }
 	else if (facingH < 0) { facing = LEFT; }
 
-	//Move the character position & collider
-	//+ speed * facingDirection
-	position.x += 1 * facingH;
-	position.y -= 1 * facingV;
-	collider->setPos(position.x, position.y);
-
-	App->renderer->camera.x -= 2 * facingH;
-	App->renderer->camera.y += 2 * facingV;
-
-	//If there's movement, animate. If not, static image.
-	if (facingH != 0 || facingV != 0){
-		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
-	}
-	else {
-		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentFrame()), 1.0f);
-	}
+	//Move the character collider + speed * facingDirection
+	//to see if you can go ahead
+	collider->box.x += facingH * speed;
+	collider->box.y -= facingV * speed;
 
 	//Attack
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN){
@@ -153,8 +141,59 @@ update_status ModulePlayer::Update()
 	return UPDATE_CONTINUE;
 }
 
+update_status ModulePlayer::Update(){
+
+	//If you can move in that direction because the collider didn't correct himself
+	if (collider->box.x != position.x || collider->box.y != position.y) {
+		
+		iPoint difference = {
+			collider->box.x - position.x,
+			collider->box.y - position.y };
+
+		position.x += difference.x;
+		position.y += difference.y;
+
+		App->renderer->camera.x -= difference.x * 2;
+		App->renderer->camera.y -= difference.y * 2;
+
+		//There's movement. Animate.
+		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
+
+	} else {
+
+		//There's no movement. Static image
+		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentFrame()), 1.0f);
+
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+//On a collision
 void ModulePlayer::OnCollision(Collider* col1, Collider* col2){
-	if (col2->type == COLLIDER_ENEMY){
+	switch (col2->type)
+	{
+	case COLLIDER_WALL: {
+		//If you can't go in that direction
+
+		SDL_Rect* col1b = &col1->box;
+		SDL_Rect* col2b = &col2->box;
+
+		//Vertical correction
+		if (position.x < col2b->x + col2b->w && position.x + col1b->w > col2b->x)
+			collider->box.y = position.y;
+
+		//Horizontal correction
+		if (position.y < col2b->y + col2b->h && position.y + col1b->h > col2b->y)
+			collider->box.x = position.x; 
+
+		break;
+		}
+
+	case COLLIDER_ENEMY:
 		LOG("UUUGH! Collision!");
+		break;
+	default:
+		break;
 	}
 }

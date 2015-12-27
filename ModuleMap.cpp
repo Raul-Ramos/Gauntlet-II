@@ -173,6 +173,10 @@ bool ModuleMap::Start(){
 			ss.ignore();
 	}
 
+	//Gets the player position
+	App->player->position.x = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("x"));
+	App->player->position.y = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("y"));
+
 	///////////////////// MAP DRAWING /////////////////////
 	//Loads the texture
 	graphics = App->textures->Load("gauntlet2.png");
@@ -210,6 +214,7 @@ bool ModuleMap::Start(){
 			wall->position.x = x * 16;
 			wall->position.y = y * 16;
 			wall->direction = static_cast<WallDirection>(direction);
+			wall->collider = App->collisions->AddCollider(COLLIDER_WALL, { x * 16, y * 16, 16, 16 }, NULL);
 
 			walls.push_back(wall);
 
