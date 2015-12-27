@@ -24,6 +24,8 @@ update_status Particle::Update()
 {
 	position.x += speed.x;
 	position.y += speed.y;
+	collider->box.x += speed.x;
+	collider->box.y += speed.y;
 
 	App->renderer->Blit(graphics, position.x, position.y, &(animation.GetCurrentAnimatedFrame()), 1.0f);
 

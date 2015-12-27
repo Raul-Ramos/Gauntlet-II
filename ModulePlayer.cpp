@@ -5,11 +5,8 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
-#include "SDL/include/SDL.h"
-
-//TODO: Could be innecesary
-#include "Particle.h"
 #include "ModuleParticles.h"
+#include "SDL/include/SDL.h"
 
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
@@ -74,10 +71,10 @@ update_status ModulePlayer::PreUpdate()
 	int facingV = 0;
 
 	//Key reading
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) facingH = 1;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) facingH = -1;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) facingV = 1;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) facingV = -1;
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) facingH = 1;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) facingH = -1;
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) facingV = 1;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) facingV = -1;
 
 	//Determine facing direction
 	if (facingV < 0){
@@ -93,48 +90,32 @@ update_status ModulePlayer::PreUpdate()
 	else if (facingH > 0) { facing = RIGHT; }
 	else if (facingH < 0) { facing = LEFT; }
 
+	//Shoot projectile. You can't move while attacking
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT){
+
+		//If the shoot cooldown is over
+		if (actualShootCooldown > shootCooldown){
+			App->particles->AddParticles(App->particles->CreateProjectile(PROJECTILE_WARRIOR, position, facing, graphics));
+			actualShootCooldown = 1;
+		}
+		else { 
+
+			//Reduces cooldown. For some reason, diagonal shooting cools faster
+			if (facing == UP || facing == DOWN || facing == LEFT || facing == RIGHT){
+				++actualShootCooldown;
+			} else {
+				actualShootCooldown += 2;
+			}
+			
+		}
+	
+	} else {
+	//If it's not shooting, it's moving
+
 	//Move the character collider + speed * facingDirection
 	//to see if you can go ahead
 	collider->box.x += facingH * speed;
 	collider->box.y -= facingV * speed;
-
-	//Attack
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN){
-
-		//Creates the particle
-		Particle* particle = new Particle();
-		particle->facing = facing;
-		particle->graphics = graphics;
-		particle->collider = App->collisions->AddCollider(COLLIDER_PLAYER_PROJECTILE, { position.x, position.y, 16, 16 });
-		particle->position = { position.x, position.y };
-		particle->duration = 10000;
-
-		int dirH, dirV;
-		switch (facing)
-		{
-		case UP:		dirH = 0; dirV = -1;  break;
-		case UPRIGHT:	dirH = 1; dirV = -1;  break;
-		case RIGHT:		dirH = 1; dirV = 0;   break;
-		case DOWNRIGHT: dirH = 1; dirV = 1;   break;
-		case DOWN:		dirH = 0; dirV = 1;   break;
-		case DOWNLEFT:	dirH = -1; dirV = 1;  break;
-		case LEFT:		dirH = -1; dirV = 0;  break;
-		case UPLEFT:	dirH = -1; dirV = -1; break;
-		default:		dirH = 0; dirV = -1;  break;
-		}
-		particle->speed = { dirH * 2, dirV * 2 };
-		
-		//Does the throw animation
-		int yValue = (18 * 9) + 1;				//(Tilesize * line) + border
-		int dim = 18 - 2;						//Dimension. Tilesize - (border*2). Both width and height.
-		
-		for (int i = 0; i < 8; i++){
-			//Xvalue = Tilesize * ( column + animationStep ) + border
-			particle->animation.frames.push_back({ 18 * (24 + i) + 1, yValue, dim, dim });
-		}
-		particle->animation.speed = 0.5f;
-
-		App->particles->AddParticles(particle);
 
 	}
 

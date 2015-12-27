@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Module.h"
 #include "Particle.h"
+#include "Projectile.h"
 
 class ModuleParticles : public Module
 {
@@ -18,6 +19,7 @@ public:
 	bool CleanUp();
 
 	void AddParticles(Particle* particle);
+	Projectile* CreateProjectile(projectile_type type, iPoint position, Facing facing, SDL_Texture* graphics);
 
 private:
 

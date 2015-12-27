@@ -82,6 +82,9 @@
     <ClInclude Include="ModuleCollectible.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -133,6 +136,9 @@
       <Filter>Utils\tinyxml2</Filter>
     </ClCompile>
     <ClCompile Include="ModuleCollectible.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
   </ItemGroup>

@@ -28,6 +28,9 @@ public:
 	int health = 0;
 	int numKeys = 0;
 
+	int shootCooldown = 45;
+	int actualShootCooldown = shootCooldown;
+
 	SDL_Texture* graphics = nullptr;
 	iPoint position;
 	Facing facing = DOWN;

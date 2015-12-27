@@ -2,6 +2,7 @@
 #define __PARTICLE_H__
 
 #include "Globals.h"
+#include "Module.h"
 #include "Point.h"
 #include "Directions.h"
 #include "Animation.h"
@@ -9,7 +10,7 @@
 struct Collider;
 struct SDL_Texture;
 
-struct Particle
+struct Particle : Module
 {
 	Particle();
 	~Particle();
