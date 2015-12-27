@@ -35,6 +35,24 @@ ModuleMap::ModuleMap(){
 	wallPreset[WALLDIRECTION_UP_DOWN_LEFT_RIGHT] = { (7 * 18) + 1, (13 * 18) + 1, dim, dim };
 
 	floorPreset = { (16 * 18) + 1, (12 * 18) + 1, dim, dim };
+
+	doorPreset[WALLDIRECTION_NONE] = { (39 * 18) + 1, (6 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_UP] = { (40 * 18) + 1, (6 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_RIGHT] = { (41 * 18) + 1, (6 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_UP_RIGHT] = { (42 * 18) + 1, (6 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_DOWN] = { (43 * 18) + 1, (6 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_UP_DOWN] = { (0 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_DOWN_RIGHT] = { (1 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_UP_DOWN_RIGHT] = { (2 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_LEFT] = { (3 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_UP_LEFT] = { (4 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_LEFT_RIGHT] = { (5 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_UP_LEFT_RIGHT] = { (6 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_DOWN_LEFT] = { (7 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_UP_DOWN_LEFT] = { (8 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_DOWN_LEFT_RIGHT] = { (9 * 18) + 1, (7 * 18) + 1, dim, dim };
+	doorPreset[WALLDIRECTION_UP_DOWN_LEFT_RIGHT] = { (10 * 18) + 1, (7 * 18) + 1, dim, dim };
+
 }
 
 ModuleMap::~ModuleMap(){
@@ -46,6 +64,10 @@ ModuleMap::~ModuleMap(){
 	for (vector<iPoint*>::iterator it = floor.begin(); it != floor.end(); ++it)
 		RELEASE(*it);
 	floor.clear();
+
+	for (vector<Door*>::iterator it = doors.begin(); it != doors.end(); ++it)
+		RELEASE(*it);
+	doors.clear();
 
 	for (vector<ModuleCollectible*>::iterator it = collectibles.begin(); it != collectibles.end(); ++it)
 		RELEASE(*it);
@@ -91,6 +113,8 @@ bool ModuleMap::Start(){
 	graphics = App->textures->Load("gauntlet2.png");
 
 	int x, y, direction;
+	int doorGroupId = 0;
+
 	for (i = 0; i < worldValues.size(); i++){
 
 		//Gets X and Y
@@ -114,7 +138,7 @@ bool ModuleMap::Start(){
 			if (x == 0 || worldValues[(y*width) + x - 1] == WALL)
 				direction += WALLDIRECTION_LEFT;
 
-			if (x + 1 == width || worldValues[(y*width) + x + 1] == 575)
+			if (x + 1 == width || worldValues[(y*width) + x + 1] == WALL)
 				direction += WALLDIRECTION_RIGHT;
 
 			//Creates the wall
@@ -129,6 +153,71 @@ bool ModuleMap::Start(){
 		case FLOOR:
 			floor.push_back(new iPoint(x * 16, y * 16));
 			break;
+
+		case DOOR: {
+
+			//Searches for the door other positions and
+			//gets them under the same group ID
+			vector<iPoint> openPositions = {{x,y}};
+			iPoint it; //Iterator
+			int newPosition;
+
+			while (openPositions.size() > 0){
+
+				//Operates on the last open door and closes it
+				//so it won't be read either by other open
+				//positions nor by the resumed map drawing
+				it = openPositions.back();
+				openPositions.pop_back();
+				worldValues[(it.y*width) + it.x] = CLOSED_DOOR;
+
+				Door* door = new Door();
+				direction = 0;
+
+				//Checks if there is another door or border in every direction
+				//if the position is not a border the position is opened for inspection
+				newPosition = ((it.y - 1)*width) + it.x;
+				if (it.y == 0 || worldValues[newPosition] == DOOR || worldValues[newPosition] == CLOSED_DOOR){
+					direction += WALLDIRECTION_UP;
+					if (it.y != 0 && worldValues[newPosition] == DOOR)
+						openPositions.push_back({ it.x, it.y - 1 });
+				}
+
+				newPosition = ((it.y + 1)*width) + it.x;
+				if (it.y + 1 == height || worldValues[newPosition] == DOOR || worldValues[newPosition] == CLOSED_DOOR){
+					direction += WALLDIRECTION_DOWN;
+					if (it.y + 1 != height && worldValues[newPosition] == DOOR)
+						openPositions.push_back({ it.x, it.y + 1 });
+				}
+
+				newPosition = (y*width) + it.x - 1;
+				if (it.x == 0 || worldValues[newPosition] == DOOR || worldValues[newPosition] == CLOSED_DOOR) {
+					direction += WALLDIRECTION_LEFT;
+					if (it.x != 0 && worldValues[newPosition] == DOOR)
+						openPositions.push_back({ it.x - 1, it.y });
+				}
+
+				newPosition = (y*width) + it.x + 1;
+				if (it.x + 1 == width || worldValues[newPosition] == DOOR || worldValues[newPosition] == CLOSED_DOOR) {
+					direction += WALLDIRECTION_RIGHT;
+					if (it.x + 1 != width && worldValues[newPosition] == DOOR)
+						openPositions.push_back({ it.x + 1, it.y });
+				}
+
+				door->position.x = it.x * 16;
+				door->position.y = it.y * 16;
+				door->direction = static_cast<WallDirection>(direction);
+				door->groupID = doorGroupId;
+
+				doors.push_back(door);
+				
+			}
+
+			//Increases the door group id for the next door
+			doorGroupId++;
+			
+			break;
+			}
 
 		case CHEST:
 			collectibles.push_back(CreateCollectible(COLLECTIBLE_TREASURE, {x*16,y*16}));
@@ -175,6 +264,11 @@ update_status ModuleMap::Update(){
 		App->renderer->Blit(graphics, floor[i]->x, floor[i]->y, &floorPreset, 1.0f);
 	}
 
+	//Renders the doors
+	for (int i = 0; i < doors.size(); i++){
+		App->renderer->Blit(graphics, doors[i]->position.x, doors[i]->position.y, &doorPreset[doors[i]->direction], 1.0f);
+	}
+
 	//Renders the collectibles
 	for (int i = 0; i < collectibles.size(); i++)
 	{
@@ -186,6 +280,7 @@ update_status ModuleMap::Update(){
 
 update_status ModuleMap::PostUpdate(){
 
+	//Deletes collectibles marked to it
 	std::vector<std::string>::size_type i = 0;
 	while (i < collectibles.size()) {
 		if (collectibles[i]->toDelete) {
@@ -203,6 +298,7 @@ update_status ModuleMap::PostUpdate(){
 	return UPDATE_CONTINUE;
 }
 
+//Creates a collectible
 ModuleCollectible* ModuleMap::CreateCollectible(const TypeCollectible type, const iPoint position){
 	ModuleCollectible* collectible = new ModuleCollectible(type);
 

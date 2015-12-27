@@ -18,6 +18,7 @@ struct SDL_Texture;
 #define CHEST 285
 #define KEY 283
 #define DOOR 313
+#define CLOSED_DOOR -2
 #define BONES 266
 #define ENEMY_SPAWN 271
 #define MEAT 280
@@ -52,6 +53,10 @@ struct Wall {
 	iPoint position;
 };
 
+struct Door : Wall {
+	int groupID;
+};
+
 class ModuleMap : public Module
 {
 public:
@@ -66,6 +71,7 @@ public:
 	//Elements in the map
 	vector<Wall*> walls;
 	vector<iPoint*> floor;
+	vector<Door*> doors;
 	vector<ModuleCollectible*> collectibles;
 
 private:
@@ -79,6 +85,7 @@ private:
 	//Images prepared for rendering
 	SDL_Rect wallPreset[16];
 	SDL_Rect floorPreset;
+	SDL_Rect doorPreset[16];
 
 	//Collectible factory
 	ModuleCollectible* CreateCollectible(const TypeCollectible type, const iPoint position);
