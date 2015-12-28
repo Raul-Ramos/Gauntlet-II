@@ -16,6 +16,7 @@ class ModuleEnemy;
 class ModuleCollisions;
 class ModuleParticles;
 class ModuleMap;
+class ModuleGUI;
 
 class Application
 {
@@ -39,6 +40,7 @@ public:
 	ModuleMap* map;
 	ModulePlayer* player;
 	ModuleEnemy* enemy;
+	ModuleGUI* GUI;
 	ModuleFadeToBlack* fade;
 
 private:

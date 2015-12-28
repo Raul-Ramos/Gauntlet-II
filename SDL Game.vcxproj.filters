@@ -85,6 +85,12 @@
     <ClInclude Include="Projectile.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleGUI.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Characters.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -139,6 +145,9 @@
       <Filter>Game Modules</Filter>
     </ClCompile>
     <ClCompile Include="Projectile.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGUI.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
   </ItemGroup>

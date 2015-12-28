@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Characters.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Directions.h" />
     <ClInclude Include="Globals.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="ModuleEnemy.h" />
     <ClInclude Include="ModuleFadeToBlack.h" />
     <ClInclude Include="ModuleInput.h" />
+    <ClInclude Include="ModuleGUI.h" />
     <ClInclude Include="ModuleMap.h" />
     <ClInclude Include="ModuleParticles.h" />
     <ClInclude Include="ModulePlayer.h" />
@@ -102,6 +104,7 @@
     <ClCompile Include="ModuleEnemy.cpp" />
     <ClCompile Include="ModuleFadeToBlack.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
+    <ClCompile Include="ModuleGUI.cpp" />
     <ClCompile Include="ModuleMap.cpp" />
     <ClCompile Include="ModuleParticles.cpp" />
     <ClCompile Include="ModulePlayer.cpp" />

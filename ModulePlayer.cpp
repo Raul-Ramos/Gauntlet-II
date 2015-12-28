@@ -31,14 +31,14 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	}
 
 	//Specifies speed
-	animations[UP].speed = 0.2f;
-	animations[UPRIGHT].speed = 0.2f;
-	animations[RIGHT].speed = 0.2f;
-	animations[DOWNRIGHT].speed = 0.2f;
-	animations[DOWN].speed = 0.2f;
-	animations[DOWNLEFT].speed = 0.2f;
-	animations[LEFT].speed = 0.2f;
-	animations[UPLEFT].speed = 0.2f;
+	animations[UP].speed = 0.15f;
+	animations[UPRIGHT].speed = 0.15f;
+	animations[RIGHT].speed = 0.15f;
+	animations[DOWNRIGHT].speed = 0.15f;
+	animations[DOWN].speed = 0.15f;
+	animations[DOWNLEFT].speed = 0.15f;
+	animations[LEFT].speed = 0.15f;
+	animations[UPLEFT].speed = 0.15f;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -100,15 +100,9 @@ update_status ModulePlayer::PreUpdate()
 			App->particles->AddParticles(App->particles->CreateProjectile(PROJECTILE_WARRIOR, position, facing, graphics));
 			actualShootCooldown = 1;
 		}
-		else { 
-
-			//Reduces cooldown. For some reason, diagonal shooting cools faster
-			if (facing == UP || facing == DOWN || facing == LEFT || facing == RIGHT){
-				++actualShootCooldown;
-			} else {
-				actualShootCooldown += 2;
-			}
-			
+		else if (facing == UPLEFT || facing == UPRIGHT || facing == DOWNLEFT || facing == DOWNRIGHT) {
+			//Extra cooldown. For some reason, diagonal shooting cools faster
+			++actualShootCooldown;
 		}
 	
 	} else {
@@ -120,6 +114,9 @@ update_status ModulePlayer::PreUpdate()
 	collider->box.y -= facingV * speed;
 
 	}
+
+	//Shoot cooldown
+	++actualShootCooldown;
 
 	return UPDATE_CONTINUE;
 }

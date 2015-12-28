@@ -10,6 +10,7 @@
 #include "ModuleCollisions.h"
 #include "ModuleEnemy.h"
 #include "ModuleMap.h"
+#include "ModuleGUI.h"
 
 using namespace std;
 
@@ -30,6 +31,7 @@ Application::Application()
 	// Game Modules
 	modules.push_back(player = new ModulePlayer(false));
 	modules.push_back(enemy = new ModuleEnemy());
+	modules.push_back(GUI = new ModuleGUI());
 	modules.push_back(fade = new ModuleFadeToBlack());
 }
 
