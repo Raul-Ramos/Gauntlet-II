@@ -19,7 +19,7 @@ struct Particle : Module
 	bool isMarkedForDead() const;
 
 	SDL_Texture* graphics = nullptr;
-	iPoint position;
+	fPoint position;
 	iPoint speed;
 	Facing facing;
 	Collider* collider;

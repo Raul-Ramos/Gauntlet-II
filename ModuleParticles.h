@@ -19,7 +19,7 @@ public:
 	bool CleanUp();
 
 	void AddParticles(Particle* particle);
-	Projectile* CreateProjectile(projectile_type type, iPoint position, Facing facing, SDL_Texture* graphics);
+	Projectile* CreateProjectile(projectile_type type, fPoint position, Facing facing, SDL_Texture* graphics);
 
 private:
 

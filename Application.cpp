@@ -8,7 +8,7 @@
 #include "ModulePlayer.h"
 #include "ModuleParticles.h"
 #include "ModuleCollisions.h"
-#include "ModuleEnemy.h"
+#include "ModuleEnemies.h"
 #include "ModuleMap.h"
 #include "ModuleGUI.h"
 
@@ -30,7 +30,7 @@ Application::Application()
 
 	// Game Modules
 	modules.push_back(player = new ModulePlayer(false));
-	modules.push_back(enemy = new ModuleEnemy());
+	modules.push_back(enemies = new ModuleEnemies());
 	modules.push_back(GUI = new ModuleGUI());
 	modules.push_back(fade = new ModuleFadeToBlack());
 }

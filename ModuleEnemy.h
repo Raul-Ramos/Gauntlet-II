@@ -17,13 +17,17 @@ public:
 	~ModuleEnemy();
 
 	bool Start();
+	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
+	void OnCollision(Collider* c1, Collider* c2);
 
 public:
 
+	int life = 1;
+
 	SDL_Texture* graphics = nullptr;
-	iPoint position;
+	fPoint position;
 	Facing facing = DOWN;
 
 	Animation animations[8];

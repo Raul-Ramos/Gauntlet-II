@@ -12,7 +12,7 @@ class ModuleInput;
 class ModuleAudio;
 class ModuleFadeToBlack;
 class ModulePlayer;
-class ModuleEnemy;
+class ModuleEnemies;
 class ModuleCollisions;
 class ModuleParticles;
 class ModuleMap;
@@ -39,7 +39,7 @@ public:
 	ModuleCollisions* collisions;
 	ModuleMap* map;
 	ModulePlayer* player;
-	ModuleEnemy* enemy;
+	ModuleEnemies* enemies;
 	ModuleGUI* GUI;
 	ModuleFadeToBlack* fade;
 

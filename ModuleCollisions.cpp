@@ -96,7 +96,7 @@ bool ModuleCollisions::CleanUp()
 	return true;
 }
 
-Collider* ModuleCollisions::AddCollider(COLLIDER_TYPE type, SDL_Rect box, Module* father)
+Collider* ModuleCollisions::AddCollider(COLLIDER_TYPE type, fRect box, Module* father)
 {
 	Collider* ret = new Collider(type, box, father);
 	colliders.push_back(ret);

@@ -60,7 +60,7 @@ void ModuleParticles::AddParticles(Particle* particle){
 	particles.push_back(particle);
 }
 
-Projectile* ModuleParticles::CreateProjectile(projectile_type type, iPoint position, Facing facing, SDL_Texture* graphics){
+Projectile* ModuleParticles::CreateProjectile(projectile_type type, fPoint position, Facing facing, SDL_Texture* graphics){
 
 	//Creates the projectile
 	Projectile* projectile = new Projectile();

@@ -74,11 +74,13 @@
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Directions.h" />
+    <ClInclude Include="fRect.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAudio.h" />
     <ClInclude Include="ModuleCollectible.h" />
     <ClInclude Include="ModuleCollisions.h" />
+    <ClInclude Include="ModuleEnemies.h" />
     <ClInclude Include="ModuleEnemy.h" />
     <ClInclude Include="ModuleFadeToBlack.h" />
     <ClInclude Include="ModuleInput.h" />
@@ -101,6 +103,7 @@
     <ClCompile Include="ModuleAudio.cpp" />
     <ClCompile Include="ModuleCollectible.cpp" />
     <ClCompile Include="ModuleCollisions.cpp" />
+    <ClCompile Include="ModuleEnemies.cpp" />
     <ClCompile Include="ModuleEnemy.cpp" />
     <ClCompile Include="ModuleFadeToBlack.cpp" />
     <ClCompile Include="ModuleInput.cpp" />

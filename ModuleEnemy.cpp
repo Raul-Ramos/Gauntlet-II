@@ -4,7 +4,9 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
+#include "ModulePlayer.h"
 #include "SDL/include/SDL.h"
+#include <math.h>
 
 //TODO: A lot of things in common between ModulePlayer and ModuleEnemy. Inheritance?
 
@@ -59,15 +61,33 @@ bool ModuleEnemy::CleanUp()
 	LOG("Unloading enemy");
 
 	App->textures->Unload(graphics);
+	collider->toDelete = true;
 
 	return true;
 }
 
 // Update
-update_status ModuleEnemy::Update()
+update_status ModuleEnemy::PreUpdate()
 {
 	int facingH = 0;
 	int facingV = 0;
+
+	//Angle between the hero and this enemy
+	float angle = atan2(App->player->position.y - position.y, App->player->position.x - position.x) * 180 / M_PI;
+
+	//Horizontal direction
+	if (angle >= -67.5 && angle <= 67.5) {
+		++facingH;
+	} else if (abs(angle) >= 112.5){
+		--facingH;
+	}
+
+	//Vertical direction
+	if (angle <= -22.5 && angle >= -157.5) {
+		++facingV;
+	} else if (angle >= 22.5 && angle <= 157.5){
+		--facingV;
+	}
 
 	//Determine facing direction
 	if (facingV < 0){
@@ -85,12 +105,63 @@ update_status ModuleEnemy::Update()
 
 	//Move the character position
 	//+ speed * facingDirection
-	position.x += 1 * facingH;
-	position.y -= 1 * facingV;
-	collider->setPos(position.x, position.y);
+	collider->box.x += 0.6 * facingH;
+	collider->box.y -= 0.6 * facingV;
 
-	//If there's movement, animate. If not, static image.
+	//Render always animated
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleEnemy::Update(){
+
+	//If you can move in that direction because the collider didn't correct himself
+	if (collider->box.x != position.x || collider->box.y != position.y) {
+
+		fPoint difference = {
+			collider->box.x - position.x,
+			collider->box.y - position.y };
+
+		position.x += difference.x;
+		position.y += difference.y;
+
+	}
+
 	App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
 
 	return UPDATE_CONTINUE;
+}
+
+//On a collision
+void ModuleEnemy::OnCollision(Collider* col1, Collider* col2){
+	switch (col2->type)
+	{
+	case COLLIDER_WALL:
+	case COLLIDER_ENEMY:
+	case COLLIDER_COLLECTIBLE:
+	{
+		//If you can't go in that direction
+
+		fRect* col1b = &col1->box;
+		fRect* col2b = &col2->box;
+
+		//Vertical correction
+		if (position.x < col2b->x + col2b->w && position.x + col1b->w > col2b->x)
+			collider->box.y = position.y;
+
+		//Horizontal correction
+		if (position.y < col2b->y + col2b->h && position.y + col1b->h > col2b->y)
+			collider->box.x = position.x;
+
+		break;
+	}
+	case COLLIDER_PLAYER:
+		dynamic_cast<ModulePlayer*>(col2->father)->health -= 9;
+		life = 0;
+		break;
+	case COLLIDER_PROJECTILE:
+		break;
+	default:
+		break;
+	}
 }

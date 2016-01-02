@@ -25,16 +25,16 @@ public:
 public:
 	int attackKey;
 
-	int speed = 1;
+	float speed = 1;
 	int score = 0;
-	int health = 0;
+	int health = 2000;
 	int numKeys = 0;
 
 	int shootCooldown = 45;
 	int actualShootCooldown = shootCooldown;
 
 	SDL_Texture* graphics = nullptr;
-	iPoint position;
+	fPoint position;
 	Facing facing = DOWN;
 
 	Animation animations[8];

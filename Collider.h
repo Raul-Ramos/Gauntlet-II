@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "Application.h"
+#include "fRect.h"
 
 //Collider identification types
 //None is the last one so you can get
@@ -24,11 +25,11 @@ struct Collider
 	};
 
 	COLLIDER_TYPE type;
-	SDL_Rect box;
+	fRect box;
 	Module* father;
 	bool toDelete = false;
 
-	Collider(COLLIDER_TYPE type, SDL_Rect box, Module* father) :
+	Collider(COLLIDER_TYPE type, fRect box, Module* father) :
 		type(type), box(box), father(father) {}
 
 	void setPos(const int x, const int y) { box.x = x; box.y = y; }
@@ -36,7 +37,7 @@ struct Collider
 
 	//Cheks if there are not gasp in horizontal and vertical between two
 	//non-rotated rectangles
-	bool CheckCollision(SDL_Rect box2) const {
+	bool CheckCollision(fRect box2) const {
 		return (box.x < box2.x + box2.w &&
 			box.x + box.w > box2.x &&			
 			box.y < box2.y + box2.h &&			

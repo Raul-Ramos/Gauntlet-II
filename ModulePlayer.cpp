@@ -129,7 +129,7 @@ update_status ModulePlayer::Update(){
 	//If you can move in that direction because the collider didn't correct himself
 	if (collider->box.x != position.x || collider->box.y != position.y) {
 		
-		iPoint difference = {
+		fPoint difference = {
 			collider->box.x - position.x,
 			collider->box.y - position.y };
 
@@ -162,10 +162,10 @@ void ModulePlayer::OnCollision(Collider* col1, Collider* col2){
 	switch (col2->type)
 	{
 	case COLLIDER_WALL: {
-		//If you can't go in that direction
 
-		SDL_Rect* col1b = &col1->box;
-		SDL_Rect* col2b = &col2->box;
+		//If you can't go in that direction
+		fRect* col1b = &col1->box;
+		fRect* col2b = &col2->box;
 
 		//Vertical correction
 		if (position.x < col2b->x + col2b->w && position.x + col1b->w > col2b->x)
