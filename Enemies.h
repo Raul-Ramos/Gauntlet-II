@@ -1,0 +1,11 @@
+#ifndef __ENEMIES_H__
+#define __ENEMIES_H__
+
+enum enemyType{
+	ENEMYTYPE_GHOST,
+	ENEMYTYPE_GRUNT,
+	ENEMYTYPE_DEMON,
+	ENEMYTYPE_NONE
+};
+
+#endif // __ENEMIES_H__

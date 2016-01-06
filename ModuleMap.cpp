@@ -5,6 +5,7 @@
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
 #include "ModulePlayer.h"
+#include "ModuleEnemies.h"
 #include "Animation.h"
 #include <sstream>
 
@@ -332,6 +333,18 @@ bool ModuleMap::Start(){
 
 			break;
 			}
+
+		case BONES:
+			App->enemies->AddSpawnPoint(ENEMYTYPE_GHOST, { x * 16.0f, y * 16.0f });
+			break;
+
+		case GRUNT_SPAWN:
+			App->enemies->AddSpawnPoint(ENEMYTYPE_GRUNT, { x * 16.0f, y * 16.0f });
+			break;
+
+		case DEMON_SPAWN:
+			App->enemies->AddSpawnPoint(ENEMYTYPE_DEMON, { x * 16.0f, y * 16.0f });
+			break;
 
 		case CHEST:
 			collectibles.push_back(CreateCollectible(COLLECTIBLE_TREASURE, { x * 16, y * 16 }));

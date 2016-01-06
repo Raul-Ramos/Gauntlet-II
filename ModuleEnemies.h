@@ -3,9 +3,13 @@
 
 #include "Globals.h"
 #include "Module.h"
+#include "Enemies.h"
+#include "Point.h"
 #include <vector>
 
 struct ModuleEnemy;
+struct SpawnPoint;
+struct SDL_Texture;
 
 class ModuleEnemies : public Module
 {
@@ -19,12 +23,15 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	ModuleEnemy* AddEnemy();
+	SpawnPoint* AddSpawnPoint(const enemyType type, const fPoint position);
+	ModuleEnemy* AddEnemy(const fPoint position);
 
 private:
 
+	SDL_Texture* graphics = nullptr;
+
+	std::vector<SpawnPoint*> spawnPoints;
 	std::vector<ModuleEnemy*> enemies;
-	void deleteEnemy(int i);
 
 };
 

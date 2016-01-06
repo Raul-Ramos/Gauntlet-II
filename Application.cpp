@@ -29,8 +29,8 @@ Application::Application()
 	modules.push_back(collisions = new ModuleCollisions());
 
 	// Game Modules
-	modules.push_back(player = new ModulePlayer(false));
 	modules.push_back(enemies = new ModuleEnemies());
+	modules.push_back(player = new ModulePlayer(false));
 	modules.push_back(GUI = new ModuleGUI());
 	modules.push_back(fade = new ModuleFadeToBlack());
 }

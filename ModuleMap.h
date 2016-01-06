@@ -20,7 +20,8 @@ struct SDL_Texture;
 #define DOOR 313
 #define CLOSED_DOOR -2
 #define BONES 266
-#define ENEMY_SPAWN 271
+#define GRUNT_SPAWN 271
+#define DEMON_SPAWN 269
 #define MEAT 280
 #define DRINK 277
 #define EXIT 264

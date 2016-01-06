@@ -13,7 +13,7 @@ struct SDL_Texture;
 class ModuleEnemy : public Module
 {
 public:
-	ModuleEnemy();
+	ModuleEnemy(const fPoint position);
 	~ModuleEnemy();
 
 	bool Start();

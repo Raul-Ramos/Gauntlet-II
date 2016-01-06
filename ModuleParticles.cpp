@@ -100,11 +100,13 @@ Projectile* ModuleParticles::CreateProjectile(projectile_type type, fPoint posit
 				projectile->animation.frames.push_back({ 18 * (24 + i) + 1, yValue, dim, dim });
 			}
 			projectile->animation.speed = 0.5f;
-
+			projectile->damage = 12 * 3;
 		}
 	default:
 		break;
 	}
+
+	
 
 	return projectile;
 }

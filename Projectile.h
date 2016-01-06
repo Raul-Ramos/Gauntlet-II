@@ -11,6 +11,7 @@ enum projectile_type {
 struct Projectile : Particle {
 
 	projectile_type projectileType;
+	int damage = 0;
 
 	void OnCollision(Collider* col1, Collider* col2);
 

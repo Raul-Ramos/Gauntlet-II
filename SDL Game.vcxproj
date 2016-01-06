@@ -74,6 +74,8 @@
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Directions.h" />
+    <ClInclude Include="Enemies.h" />
+    <ClInclude Include="EnemySpawn.h" />
     <ClInclude Include="fRect.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Module.h" />
@@ -98,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="EnemySpawn.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />

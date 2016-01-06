@@ -97,6 +97,12 @@
     <ClInclude Include="ModuleEnemies.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="EnemySpawn.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemies.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -157,6 +163,9 @@
       <Filter>Game Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleEnemies.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySpawn.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
   </ItemGroup>

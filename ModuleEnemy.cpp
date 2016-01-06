@@ -5,15 +5,14 @@
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
 #include "ModulePlayer.h"
+#include "Projectile.h"
 #include "SDL/include/SDL.h"
 #include <math.h>
 
 //TODO: A lot of things in common between ModulePlayer and ModuleEnemy. Inheritance?
 
-ModuleEnemy::ModuleEnemy() : Module()
+ModuleEnemy::ModuleEnemy(const fPoint position) : position(position)
 {
-	position.x = 100;
-	position.y = 50;
 
 	// Reads the animations out of the spritesheet
 
@@ -47,7 +46,7 @@ ModuleEnemy::~ModuleEnemy()
 // Load assets
 bool ModuleEnemy::Start()
 {
-	LOG("Loading player");
+	LOG("Loading enemy");
 
 	graphics = App->textures->Load("gauntlet2.png");
 	collider = App->collisions->AddCollider(COLLIDER_ENEMY, { position.x, position.y, 16, 16 }, this);
@@ -108,8 +107,6 @@ update_status ModuleEnemy::PreUpdate()
 	collider->box.x += 0.6 * facingH;
 	collider->box.y -= 0.6 * facingV;
 
-	//Render always animated
-
 	return UPDATE_CONTINUE;
 }
 
@@ -127,6 +124,7 @@ update_status ModuleEnemy::Update(){
 
 	}
 
+	//Render always animated
 	App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
 
 	return UPDATE_CONTINUE;
@@ -158,8 +156,11 @@ void ModuleEnemy::OnCollision(Collider* col1, Collider* col2){
 	case COLLIDER_PLAYER:
 		dynamic_cast<ModulePlayer*>(col2->father)->health -= 9;
 		life = 0;
+		App->player->score += 10;
 		break;
 	case COLLIDER_PROJECTILE:
+		life -= dynamic_cast<Projectile*>(col2->father)->damage;
+		if (life < 0) App->player->score += 10;
 		break;
 	default:
 		break;
