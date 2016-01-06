@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "ModuleRender.h"
+#include "ModulePlayers.h"
 #include "ModulePlayer.h"
 
 using namespace std;
@@ -68,35 +69,28 @@ update_status ModuleGUI::Update(){
 
 	//Characters
 	int base = 57;
-	App->renderer->Blit(interfaceGraphics, 256, base, &characters[COLOR_RED][CHARACTER_WARRIOR], 0.0F);
-	App->renderer->Blit(interfaceGraphics, 238, base + 8, &ScoreHealth[COLOR_RED], 0.0F);
-	printNumber(App->player->score, { 256, base + 15 }, COLOR_RED);
-	printNumber(App->player->health, { 304, base + 15 }, COLOR_RED);
-	for (int i = 0; i < App->player->numKeys; i++)
-		App->renderer->Blit(interfaceGraphics, 216 + (i*8), base + 23, &key, 0.0F);
+	ModulePlayer* player;
+	colors color;
 
-	//TODO: Al of this is temporal
-	base += 34;
-	App->renderer->Blit(interfaceGraphics, 256, base, &characters[COLOR_BLUE][CHARACTER_VALKYRIE], 0.0F);
-	App->renderer->Blit(interfaceGraphics, 238, base + 8, &ScoreHealth[COLOR_BLUE], 0.0F);
-	App->renderer->Blit(interfaceGraphics, 225, base + 23, &selectHero, 0.0F);
-	printNumber(0, { 256, base + 15 }, COLOR_BLUE);
-	printNumber(0, { 304, base + 15 }, COLOR_BLUE);
+	for (int i = 0; i < 4; i++){
+		color = static_cast<colors>(i);
+		player = App->players->players[i];
 
-	base += 34;
-	App->renderer->Blit(interfaceGraphics, 256, base, &characters[COLOR_YELLOW][CHARACTER_WIZARD], 0.0F);
-	App->renderer->Blit(interfaceGraphics, 238, base + 8, &ScoreHealth[COLOR_YELLOW], 0.0F);
-	App->renderer->Blit(interfaceGraphics, 225, base + 23, &selectHero, 0.0F);
-	printNumber(0, { 256, base + 15 }, COLOR_YELLOW);
-	printNumber(0, { 304, base + 15 }, COLOR_YELLOW);
-
-	base += 34;
-	App->renderer->Blit(interfaceGraphics, 256, base, &characters[COLOR_GREEN][CHARACTER_ELF], 0.0F);
-	App->renderer->Blit(interfaceGraphics, 238, base + 8, &ScoreHealth[COLOR_GREEN], 0.0F);
-	App->renderer->Blit(interfaceGraphics, 225, base + 23, &selectHero, 0.0F);
-	printNumber(0, { 256, base + 15 }, COLOR_GREEN);
-	printNumber(0, { 304, base + 15 }, COLOR_GREEN);
-
+		App->renderer->Blit(interfaceGraphics, 256, base, &characters[color][player->characterType], 0.0F);
+		App->renderer->Blit(interfaceGraphics, 238, base + 8, &ScoreHealth[color], 0.0F);
+		printNumber(player->score, { 256, base + 15 }, color);
+		printNumber(player->health, { 304, base + 15 }, color);
+		
+		//If is active, show the keys. If not, the hero select text
+		if (player->active){
+			for (int i = 0; i < player->numKeys; i++)
+				App->renderer->Blit(interfaceGraphics, 216 + (i * 8), base + 23, &key, 0.0F);
+		} else {
+			App->renderer->Blit(interfaceGraphics, 225, base + 23, &selectHero, 0.0F);
+		}
+		
+		base += 34;
+	}
 
 	return UPDATE_CONTINUE;
 }

@@ -11,11 +11,6 @@
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 {
-	attackKey = SDL_SCANCODE_Q;
-
-	position.x = 0;
-	position.y = 0;
-
 	// Reads the animations out of the spritesheet
 	
 	int yValue = (18 * 9) + 1;	//(Tilesize * line) + border
@@ -69,90 +64,96 @@ bool ModulePlayer::CleanUp()
 // Update
 update_status ModulePlayer::PreUpdate()
 {
-	int facingH = 0;
-	int facingV = 0;
+	if (active){
 
-	//Key reading
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) facingH = 1;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) facingH = -1;
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) facingV = 1;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) facingV = -1;
+		int facingH = 0;
+		int facingV = 0;
 
-	//Determine facing direction
-	if (facingV < 0){
-		if (facingH > 0){ facing = DOWNRIGHT; }
-		else if (facingH < 0){ facing = DOWNLEFT; }
-		else { facing = DOWN; }
-	}
-	else if (facingV > 0){
-		if (facingH > 0){ facing = UPRIGHT; }
-		else if (facingH < 0){ facing = UPLEFT; }
-		else { facing = UP; }
-	}
-	else if (facingH > 0) { facing = RIGHT; }
-	else if (facingH < 0) { facing = LEFT; }
+		//Key reading
+		if (App->input->GetKey(rightKey) == KEY_REPEAT) facingH = 1;
+		if (App->input->GetKey(leftKey) == KEY_REPEAT) facingH = -1;
+		if (App->input->GetKey(upKey) == KEY_REPEAT) facingV = 1;
+		if (App->input->GetKey(downKey) == KEY_REPEAT) facingV = -1;
 
-	//Shoot projectile. You can't move while attacking
-	if (App->input->GetKey(attackKey) == KEY_REPEAT){
-
-		//If the shoot cooldown is over
-		if (actualShootCooldown > shootCooldown){
-			App->particles->AddParticles(App->particles->CreateProjectile(PROJECTILE_WARRIOR, position, facing, graphics));
-			actualShootCooldown = 1;
+		//Determine facing direction
+		if (facingV < 0){
+			if (facingH > 0){ facing = DOWNRIGHT; }
+			else if (facingH < 0){ facing = DOWNLEFT; }
+			else { facing = DOWN; }
 		}
-		else if (facing == UPLEFT || facing == UPRIGHT || facing == DOWNLEFT || facing == DOWNRIGHT) {
-			//Extra cooldown. For some reason, diagonal shooting cools faster
-			++actualShootCooldown;
+		else if (facingV > 0){
+			if (facingH > 0){ facing = UPRIGHT; }
+			else if (facingH < 0){ facing = UPLEFT; }
+			else { facing = UP; }
 		}
+		else if (facingH > 0) { facing = RIGHT; }
+		else if (facingH < 0) { facing = LEFT; }
+
+		//Shoot projectile. You can't move while attacking
+		if (App->input->GetKey(attackKey) == KEY_REPEAT){
+
+			//If the shoot cooldown is over
+			if (actualShootCooldown > shootCooldown){
+				App->particles->AddParticles(App->particles->CreateProjectile(PROJECTILE_WARRIOR, position, facing, graphics, this));
+				actualShootCooldown = 1;
+			}
+			else if (facing == UPLEFT || facing == UPRIGHT || facing == DOWNLEFT || facing == DOWNRIGHT) {
+				//Extra cooldown. For some reason, diagonal shooting cools faster
+				++actualShootCooldown;
+			}
 	
-	} else {
-	//If it's not shooting, it's moving
+		} else {
+		//If it's not shooting, it's moving
 
-	//Move the character collider + speed * facingDirection
-	//to see if you can go ahead
-	collider->box.x += facingH * speed;
-	collider->box.y -= facingV * speed;
+		//Move the character collider + speed * facingDirection
+		//to see if you can go ahead
+		collider->box.x += facingH * speed;
+		collider->box.y -= facingV * speed;
 
-	}
+		}
 
-	//Shoot cooldown
-	++actualShootCooldown;
+		//Shoot cooldown
+		++actualShootCooldown;
+
+	} //END_ACTIVE
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModulePlayer::Update(){
 
-	//Whatever you're animated or not
-	bool move = false;
+	if (active) {
+		//Whatever you're animated or not
+		bool move = false;
 
-	//If you can move in that direction because the collider didn't correct himself
-	if (collider->box.x != position.x || collider->box.y != position.y) {
-		
-		fPoint difference = {
-			collider->box.x - position.x,
-			collider->box.y - position.y };
+		//If you can move in that direction because the collider didn't correct himself
+		if (collider->box.x != position.x || collider->box.y != position.y) {
 
-		position.x += difference.x;
-		position.y += difference.y;
+			fPoint difference = {
+				collider->box.x - position.x,
+				collider->box.y - position.y };
 
-		App->renderer->camera.x -= difference.x * 2;
-		App->renderer->camera.y -= difference.y * 2;
+			position.x += difference.x;
+			position.y += difference.y;
 
-		//There's movement. Animate.
-		move = true;
+			App->renderer->camera.x -= difference.x * 2;
+			App->renderer->camera.y -= difference.y * 2;
 
-	}
-	//If you don't move but you're attacking, you're still animated
-	else if (App->input->GetKey(attackKey) == KEY_REPEAT){
-		move = true;
-	}
+			//There's movement. Animate.
+			move = true;
 
-	if (move)
-		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
-	else
-		App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentFrame()), 1.0f);
+		}
+		//If you don't move but you're attacking, you're still animated
+		else if (App->input->GetKey(attackKey) == KEY_REPEAT){
+			move = true;
+		}
 
+		if (move)
+			App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentAnimatedFrame()), 1.0f);
+		else
+			App->renderer->Blit(graphics, position.x, position.y, &(animations[facing].GetCurrentFrame()), 1.0f);
+
+	} //END_ACTIVE
 
 	return UPDATE_CONTINUE;
 }

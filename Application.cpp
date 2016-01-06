@@ -5,7 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
-#include "ModulePlayer.h"
+#include "ModulePlayers.h"
 #include "ModuleParticles.h"
 #include "ModuleCollisions.h"
 #include "ModuleEnemies.h"
@@ -30,7 +30,7 @@ Application::Application()
 
 	// Game Modules
 	modules.push_back(enemies = new ModuleEnemies());
-	modules.push_back(player = new ModulePlayer(false));
+	modules.push_back(players = new ModulePlayers());
 	modules.push_back(GUI = new ModuleGUI());
 	modules.push_back(fade = new ModuleFadeToBlack());
 }
@@ -53,8 +53,6 @@ bool Application::Init()
 		if((*it)->IsEnabled() == true)
 			ret = (*it)->Start();
 	}
-
-	player->Enable();
 
 	return ret;
 }

@@ -4,6 +4,7 @@
 #include "SDL/include/SDL.h"
 #include "Directions.h"
 #include "ModuleCollisions.h"
+#include "ModulePlayer.h"
 
 ModuleParticles::ModuleParticles()
 {
@@ -60,7 +61,7 @@ void ModuleParticles::AddParticles(Particle* particle){
 	particles.push_back(particle);
 }
 
-Projectile* ModuleParticles::CreateProjectile(projectile_type type, fPoint position, Facing facing, SDL_Texture* graphics){
+Projectile* ModuleParticles::CreateProjectile(projectile_type type, fPoint position, Facing facing, SDL_Texture* graphics, ModulePlayer* sender){
 
 	//Creates the projectile
 	Projectile* projectile = new Projectile();
@@ -106,7 +107,9 @@ Projectile* ModuleParticles::CreateProjectile(projectile_type type, fPoint posit
 		break;
 	}
 
-	
+	if (sender != nullptr){
+		projectile->sender = sender;
+	}
 
 	return projectile;
 }

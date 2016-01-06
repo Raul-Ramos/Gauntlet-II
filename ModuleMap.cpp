@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
+#include "ModulePlayers.h"
 #include "ModulePlayer.h"
 #include "ModuleEnemies.h"
 #include "Animation.h"
@@ -191,8 +192,8 @@ bool ModuleMap::Start(){
 	}
 
 	//Gets the player position
-	App->player->position.x = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("x"));
-	App->player->position.y = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("y"));
+	App->players->players[0]->position.x = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("x"));
+	App->players->players[0]->position.y = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("y"));
 
 	///////////////////// MAP DRAWING /////////////////////
 	//Loads the texture
@@ -465,8 +466,8 @@ void Door::OnCollision(Collider* col1, Collider* col2){
 		//If the player has keys
 		//Gets rid of one of them and marks the door pieces in his
 		//group to be deleted by the module map
-		if (App->player->numKeys > 0){
-			App->player->numKeys--;
+		if (dynamic_cast<ModulePlayer*>(col2->father)->numKeys > 0){
+			dynamic_cast<ModulePlayer*>(col2->father)->numKeys--;
 
 			for (int i = 0; i < App->map->doors.size(); i++){
 				if (App->map->doors[i]->groupID == this->groupID){

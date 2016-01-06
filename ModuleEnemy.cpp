@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
+#include "ModulePlayers.h"
 #include "ModulePlayer.h"
 #include "Projectile.h"
 #include "SDL/include/SDL.h"
@@ -71,8 +72,28 @@ update_status ModuleEnemy::PreUpdate()
 	int facingH = 0;
 	int facingV = 0;
 
+	ModulePlayer* closestPlayer = nullptr;
+	float closestPlayerDistance = -1;
+	float distance;
+
+	for (int i = 0; i < 4; i++) {
+		if (App->players->players[i]->active){
+
+			ModulePlayer* player = App->players->players[i];
+			int distX = player->position.x - position.x;
+			int distY = player->position.y - position.y;
+			distance = sqrtf(pow(distX, 2) + pow(distY, 2));
+
+			if (closestPlayer == nullptr || distance < closestPlayerDistance){
+				closestPlayerDistance = distance;
+				closestPlayer = player;
+			}
+
+		}
+	}
+
 	//Angle between the hero and this enemy
-	float angle = atan2(App->player->position.y - position.y, App->player->position.x - position.x) * 180 / M_PI;
+	float angle = atan2(closestPlayer->position.y - position.y, closestPlayer->position.x - position.x) * 180 / M_PI;
 
 	//Horizontal direction
 	if (angle >= -67.5 && angle <= 67.5) {
@@ -153,15 +174,21 @@ void ModuleEnemy::OnCollision(Collider* col1, Collider* col2){
 
 		break;
 	}
-	case COLLIDER_PLAYER:
-		dynamic_cast<ModulePlayer*>(col2->father)->health -= 9;
+	case COLLIDER_PLAYER: {
+		ModulePlayer* player = dynamic_cast<ModulePlayer*>(col2->father);
+		player->health -= 9;
 		life = 0;
-		App->player->score += 10;
+		player->score += 10;
 		break;
-	case COLLIDER_PROJECTILE:
-		life -= dynamic_cast<Projectile*>(col2->father)->damage;
-		if (life < 0) App->player->score += 10;
+	}
+
+	case COLLIDER_PROJECTILE: {
+		Projectile* projectile = dynamic_cast<Projectile*>(col2->father);
+		life -= projectile->damage;
+		if (life < 0 && projectile->sender != nullptr) projectile->sender->score += 10;
 		break;
+	}
+
 	default:
 		break;
 	}

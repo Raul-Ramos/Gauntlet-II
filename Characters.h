@@ -1,6 +1,11 @@
+#ifndef __CHARACTERS_H__
+#define __CHARACTERS_H__
+
 enum characters {
 	CHARACTER_WARRIOR = 0,
 	CHARACTER_VALKYRIE,
 	CHARACTER_WIZARD,
 	CHARACTER_ELF
 };
+
+#endif //__CHARACTERS_H__

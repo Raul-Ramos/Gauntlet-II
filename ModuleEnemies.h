@@ -9,7 +9,6 @@
 
 struct ModuleEnemy;
 struct SpawnPoint;
-struct SDL_Texture;
 
 class ModuleEnemies : public Module
 {
@@ -27,8 +26,6 @@ public:
 	ModuleEnemy* AddEnemy(const fPoint position);
 
 private:
-
-	SDL_Texture* graphics = nullptr;
 
 	std::vector<SpawnPoint*> spawnPoints;
 	std::vector<ModuleEnemy*> enemies;

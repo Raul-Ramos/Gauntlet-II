@@ -6,6 +6,7 @@
 #include "Globals.h"
 #include "Point.h"
 #include "Directions.h"
+#include "Characters.h"
 
 struct SDL_Texture;
 struct Collider;
@@ -23,11 +24,16 @@ public:
 	void OnCollision(Collider* c1, Collider* c2);
 
 public:
-	int attackKey;
+
+	bool active = false;
+	characters characterType = CHARACTER_WARRIOR;
+
+	//Controls
+	int attackKey, upKey, downKey, leftKey, rightKey;
 
 	float speed = 1;
 	int score = 0;
-	int health = 2000;
+	int health = 0;
 	int numKeys = 0;
 
 	int shootCooldown = 45;

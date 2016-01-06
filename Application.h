@@ -11,7 +11,7 @@ class ModuleTextures;
 class ModuleInput;
 class ModuleAudio;
 class ModuleFadeToBlack;
-class ModulePlayer;
+class ModulePlayers;
 class ModuleEnemies;
 class ModuleCollisions;
 class ModuleParticles;
@@ -38,7 +38,7 @@ public:
 	ModuleParticles* particles;
 	ModuleCollisions* collisions;
 	ModuleMap* map;
-	ModulePlayer* player;
+	ModulePlayers* players;
 	ModuleEnemies* enemies;
 	ModuleGUI* GUI;
 	ModuleFadeToBlack* fade;

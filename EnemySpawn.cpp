@@ -110,14 +110,21 @@ update_status SpawnPoint::Update(){
 
 void SpawnPoint::OnCollision(Collider* c1, Collider* c2){
 	if (c1->type == COLLIDER_WALL && c2->type == COLLIDER_PROJECTILE){
+
 		//If a projectile hits it, take damage
 		life -= dynamic_cast<Projectile*>(c2->father)->damage;
 		if (life < 1){
+
 			App->map->floor.push_back(new iPoint{ (int)position.x, (int)position.y });
-			App->player->score += 10;
+
+			if (dynamic_cast<Projectile*>(c2->father)->sender != nullptr)
+				dynamic_cast<Projectile*>(c2->father)->sender->score += 10;
+
 		}
+
 	}
 	else if (c1->type == COLLIDER_SPAWNPOINT){
+
 		//If a temporal collider collides with something, this can't
 		//be used for spawning new enemies
 		for (int i = 1; i < 5; i++) {
@@ -126,5 +133,6 @@ void SpawnPoint::OnCollision(Collider* c1, Collider* c2){
 				colliders[i] = NULL;
 			}
 		}
+
 	}
 }
