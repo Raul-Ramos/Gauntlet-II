@@ -79,6 +79,10 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	//Map properties
+	int width;
+	int height;
+
 	//Elements in the map
 	vector<Wall*> walls;
 	vector<iPoint*> floor;
@@ -87,9 +91,6 @@ public:
 	vector<ModuleCollectible*> collectibles;
 
 private:
-	//Map properties
-	int width;
-	int height;
 
 	//Graphics
 	SDL_Texture* graphics = nullptr;

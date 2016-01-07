@@ -123,6 +123,7 @@ update_status ModulePlayer::PreUpdate()
 update_status ModulePlayer::Update(){
 
 	if (active) {
+
 		//Whatever you're animated or not
 		bool move = false;
 
@@ -135,9 +136,6 @@ update_status ModulePlayer::Update(){
 
 			position.x += difference.x;
 			position.y += difference.y;
-
-			App->renderer->camera.x -= difference.x * 2;
-			App->renderer->camera.y -= difference.y * 2;
 
 			//There's movement. Animate.
 			move = true;
@@ -162,7 +160,8 @@ update_status ModulePlayer::Update(){
 void ModulePlayer::OnCollision(Collider* col1, Collider* col2){
 	switch (col2->type)
 	{
-	case COLLIDER_WALL: {
+	case COLLIDER_WALL:
+	case COLLIDER_PLAYER: {
 
 		//If you can't go in that direction
 		fRect* col1b = &col1->box;
