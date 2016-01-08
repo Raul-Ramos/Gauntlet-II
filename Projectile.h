@@ -7,6 +7,9 @@ struct ModulePlayer;
 
 enum projectile_type {
 	PROJECTILE_WARRIOR,
+	PROJECTILE_VALKYRIE,
+	PROJECTILE_WIZARD,
+	PROJECTILE_ELF,
 	PROJECTILE_DEMON
 };
 
@@ -14,7 +17,7 @@ struct Projectile : Particle {
 
 	projectile_type projectileType;
 	int damage = 0;
-	ModulePlayer* sender = nullptr;
+	Module* sender = nullptr;
 
 	void OnCollision(Collider* col1, Collider* col2);
 
