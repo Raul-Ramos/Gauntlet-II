@@ -36,7 +36,7 @@ private:
 	//Used for player joining
 	int playerJoining = 0;					//What players is joining. 0 is no one, as the player one is always on.
 	Collider* playerJoinSpawnPoints[4];		//Temporal Spawn Collisions to check where the new player can join
-	void joinPlayer(int i);					//Common routines on all joinings
+	void joinPlayer(const int i);					//Common routines on all joinings
 };
 
 #endif // __MODULEPLAYERS_H__

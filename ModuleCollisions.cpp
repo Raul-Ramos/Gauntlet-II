@@ -14,7 +14,7 @@ ModuleCollisions::ModuleCollisions()
 
 	matrix[COLLIDER_PLAYER][COLLIDER_PLAYER] = true;
 	matrix[COLLIDER_PLAYER][COLLIDER_ENEMY] = true;
-	matrix[COLLIDER_PLAYER][COLLIDER_PROJECTILE] = false;
+	matrix[COLLIDER_PLAYER][COLLIDER_PROJECTILE] = true;
 	matrix[COLLIDER_PLAYER][COLLIDER_COLLECTIBLE] = true;
 	matrix[COLLIDER_PLAYER][COLLIDER_SPAWNPOINT] = true;
 
@@ -103,7 +103,7 @@ bool ModuleCollisions::CleanUp()
 	return true;
 }
 
-Collider* ModuleCollisions::AddCollider(COLLIDER_TYPE type, fRect box, Module* father)
+Collider* ModuleCollisions::AddCollider(const COLLIDER_TYPE type, const fRect box, Module* father)
 {
 	Collider* ret = new Collider(type, box, father);
 	colliders.push_back(ret);

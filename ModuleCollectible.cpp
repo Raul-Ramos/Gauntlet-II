@@ -7,7 +7,7 @@
 #include "ModuleMap.h"
 #include "Animation.h"
 
-ModuleCollectible::ModuleCollectible(TypeCollectible type) : Module(), type(type)
+ModuleCollectible::ModuleCollectible(const TypeCollectible type) : Module(), type(type)
 {
 }
 

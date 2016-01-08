@@ -11,20 +11,6 @@
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 {
-	// Reads the animations out of the spritesheet
-	
-	int yValue = (18 * 9) + 1;	//(Tilesize * line) + border
-	int dim = 18 - 2;			//Dimension. Tilesize - (border*2). Both width and height.
-
-	//Adds the three sprites of walking to their respective animations
-	for (int z = 0; z < 8; z++){
-		//Xvalue = Tilesize * ( ( animationStep * numOfDirections ) + offset) + border
-		animations[z].frames.push_back({ 18 * ((0 * 8) + z) + 1, yValue, dim, dim });
-		animations[z].frames.push_back({ 18 * ((1 * 8) + z) + 1, yValue, dim, dim });
-		animations[z].frames.push_back({ 18 * ((0 * 8) + z) + 1, yValue, dim, dim });
-		animations[z].frames.push_back({ 18 * ((2 * 8) + z) + 1, yValue, dim, dim });
-	}
-
 	//Specifies speed
 	animations[UP].speed = 0.15f;
 	animations[UPRIGHT].speed = 0.15f;
@@ -94,7 +80,7 @@ update_status ModulePlayer::PreUpdate()
 
 			//If the shoot cooldown is over
 			if (actualShootCooldown > shootCooldown){
-				App->particles->AddParticles(App->particles->CreateProjectile(PROJECTILE_WARRIOR, position, facing, graphics, this));
+				App->particles->AddParticles(App->particles->CreateProjectile(projectileType, position, facing, graphics, this));
 				actualShootCooldown = 1;
 			}
 			else if (facing == UPLEFT || facing == UPRIGHT || facing == DOWNLEFT || facing == DOWNRIGHT) {

@@ -16,7 +16,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	Collider* AddCollider(COLLIDER_TYPE type, fRect box, Module* father = NULL);
+	Collider* AddCollider(const COLLIDER_TYPE type, const fRect box, Module* father = NULL);
 
 private:
 

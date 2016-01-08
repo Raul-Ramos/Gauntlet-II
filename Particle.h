@@ -21,7 +21,6 @@ struct Particle : Module
 	SDL_Texture* graphics = nullptr;
 	fPoint position;
 	iPoint speed;
-	Facing facing;
 	Collider* collider;
 	Animation animation;
 	Uint32 begun;

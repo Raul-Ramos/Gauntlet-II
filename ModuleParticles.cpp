@@ -61,11 +61,11 @@ void ModuleParticles::AddParticles(Particle* particle){
 	particles.push_back(particle);
 }
 
-Projectile* ModuleParticles::CreateProjectile(projectile_type type, fPoint position, Facing facing, SDL_Texture* graphics, ModulePlayer* sender){
+Projectile* ModuleParticles::CreateProjectile(const projectile_type type, const fPoint position, const Facing facing, SDL_Texture* graphics, ModulePlayer* sender){
 
 	//Creates the projectile
 	Projectile* projectile = new Projectile();
-	projectile->facing = facing;
+
 	projectile->graphics = graphics;
 	projectile->position = { position.x, position.y };
 	projectile->collider = App->collisions->AddCollider(COLLIDER_PROJECTILE, { position.x, position.y, 16, 16 }, projectile);
@@ -85,7 +85,7 @@ Projectile* ModuleParticles::CreateProjectile(projectile_type type, fPoint posit
 	case UPLEFT:	dirH = -1; dirV = -1; break;
 	default:		dirH = 0; dirV = -1;  break;
 	}
-	projectile->speed = { dirH * 2, dirV * 2 };
+	projectile->speed = { dirH * 4, dirV * 4 };
 
 	//Does the throw animation
 	int dim = 18 - 2;						//Dimension. Tilesize - (border*2). Both width and height.
@@ -93,19 +93,49 @@ Projectile* ModuleParticles::CreateProjectile(projectile_type type, fPoint posit
 	switch (type)
 	{
 	case PROJECTILE_WARRIOR: {
-			
-			int yValue = (18 * 9) + 1;				//(Tilesize * line) + border
 
+			int yValue = (18 * 9) + 1;				//(Tilesize * line) + border
 			for (int i = 0; i < 8; i++){
 				//Xvalue = Tilesize * ( column + animationStep ) + border
 				projectile->animation.frames.push_back({ 18 * (24 + i) + 1, yValue, dim, dim });
 			}
 			projectile->animation.speed = 0.5f;
-			projectile->damage = 12 * 3;
+
+			break;
 		}
+
+	case PROJECTILE_VALKYRIE: {
+
+			int firstImage = 10 * 44 + 17;
+			projectile->animation.frames.push_back({ (18 * ((firstImage + facing) % 44)) + 1, (18 * ((firstImage + facing) / 44)) + 1, dim, dim });
+			projectile->animation.speed = 0.0f;
+
+			break;
+		}
+
+	case PROJECTILE_WIZARD:{
+
+			int firstImage = 11 * 44 + 10;
+			projectile->animation.frames.push_back({ (18 * ((firstImage + facing) % 44)) + 1, (18 * ((firstImage + facing) / 44)) + 1, dim, dim });
+			projectile->animation.speed = 0.0f;
+
+			break;
+	}
+
+	case PROJECTILE_ELF: {
+
+			int firstImage = 12 * 44 + 3;
+			projectile->animation.frames.push_back({ (18 * ((firstImage + facing) % 44)) + 1, (18 * ((firstImage + facing) / 44)) + 1, dim, dim });
+			projectile->animation.speed = 0.0f;
+
+			break;
+	}
+
 	default:
 		break;
 	}
+
+	projectile->damage = 12 * 3;
 
 	if (sender != nullptr){
 		projectile->sender = sender;

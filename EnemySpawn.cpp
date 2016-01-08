@@ -111,15 +111,19 @@ update_status SpawnPoint::Update(){
 void SpawnPoint::OnCollision(Collider* c1, Collider* c2){
 	if (c1->type == COLLIDER_WALL && c2->type == COLLIDER_PROJECTILE){
 
+		Projectile* projectile = dynamic_cast<Projectile*>(c2->father);
+
 		//If a projectile hits it, take damage
-		life -= dynamic_cast<Projectile*>(c2->father)->damage;
+		life -= projectile->damage;
 		if (life < 1){
 
 			App->map->floor.push_back(new iPoint{ (int)position.x, (int)position.y });
 
-			if (dynamic_cast<Projectile*>(c2->father)->sender != nullptr)
-				dynamic_cast<Projectile*>(c2->father)->sender->score += 10;
-
+			if (projectile->sender != nullptr) {
+				ModulePlayer* player = dynamic_cast<ModulePlayer*>(projectile->sender);
+				if (player != NULL)
+					player->score += 10;
+			}
 		}
 
 	}

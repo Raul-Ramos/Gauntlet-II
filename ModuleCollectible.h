@@ -22,7 +22,7 @@ enum TypeCollectible{
 class ModuleCollectible : public Module
 {
 public:
-	ModuleCollectible(TypeCollectible type);
+	ModuleCollectible(const TypeCollectible type);
 	~ModuleCollectible();
 
 	update_status Update();

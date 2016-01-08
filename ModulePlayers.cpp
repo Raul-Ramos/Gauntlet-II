@@ -10,12 +10,21 @@
 
 ModulePlayers::ModulePlayers(){
 
+	//Creates the players
 	for (int i = 0; i < 4; i++){
 		players[i] = new ModulePlayer();
 	}
 
+	//Sets JoinSpawns to nullpointer
 	playerJoinSpawnPoints[0] = nullptr;
 
+	//Default types
+	players[0]->characterType = CHARACTER_WARRIOR;
+	players[1]->characterType = CHARACTER_VALKYRIE;
+	players[2]->characterType = CHARACTER_WIZARD;
+	players[3]->characterType = CHARACTER_ELF;
+
+	//Keys
 	playerJoinButton[0] = SDL_SCANCODE_F1;
 	playerJoinButton[1] = SDL_SCANCODE_F2;
 	playerJoinButton[2] = SDL_SCANCODE_F3;
@@ -45,7 +54,9 @@ ModulePlayers::ModulePlayers(){
 	players[3]->leftKey = SDL_SCANCODE_KP_4;
 	players[3]->rightKey = SDL_SCANCODE_KP_6;
 
+	//The first player joins
 	joinPlayer(0);
+
 };
 
 ModulePlayers::~ModulePlayers(){
@@ -147,9 +158,54 @@ void ModulePlayers::OnCollision(Collider* c1, Collider* c2){
 	}
 }
 
-void ModulePlayers::joinPlayer(int i){
-	players[i]->active = true;
+void ModulePlayers::joinPlayer(const int i){
+	
+	//Grid position of the first image. Y * 44 + X
+	int firstImage = 0; 
+
+	switch (players[i]->characterType)
+	{
+		case CHARACTER_WARRIOR:
+			firstImage = 9 * 44 + 0;
+			players[i]->projectileType = PROJECTILE_WARRIOR;
+			break;
+
+		case CHARACTER_VALKYRIE:
+			firstImage = 9 * 44 + 37;
+			players[i]->projectileType = PROJECTILE_VALKYRIE;
+			break;
+
+		case CHARACTER_WIZARD:
+			firstImage = 10 * 44 + 30;
+			players[i]->projectileType = PROJECTILE_WIZARD;
+			break;
+
+		case CHARACTER_ELF:
+			firstImage = 11 * 44 + 23;
+			players[i]->projectileType = PROJECTILE_ELF;
+			break;
+
+		default:
+			break;
+	}
+
+	//Graphic dimension
+	int dim = 16;
+
+	//Loads the animations
+	//Goes direction to direction, frame to frame. Each frame of a direction is separated by 8 images.
+	//The animation is neutral position -> left step -> neutral position -> right step
+	for (int anim = 0; anim < 8; anim++){
+		players[i]->animations[anim].frames.push_back({ (18 * ((firstImage + anim + (8 * 0)) % 44)) + 1, (18 * ((firstImage + anim + (8 * 0)) / 44)) + 1, dim, dim });
+		players[i]->animations[anim].frames.push_back({ (18 * ((firstImage + anim + (8 * 1)) % 44)) + 1, (18 * ((firstImage + anim + (8 * 1)) / 44)) + 1, dim, dim });
+		players[i]->animations[anim].frames.push_back({ (18 * ((firstImage + anim + (8 * 0)) % 44)) + 1, (18 * ((firstImage + anim + (8 * 0)) / 44)) + 1, dim, dim });
+		players[i]->animations[anim].frames.push_back({ (18 * ((firstImage + anim + (8 * 2)) % 44)) + 1, (18 * ((firstImage + anim + (8 * 2)) / 44)) + 1, dim, dim });
+	}
+
+	//Initializes the player
 	players[i]->health = 2000;
+	players[i]->active = true;
+
 };
 
 //Adjusts the camera given the players position

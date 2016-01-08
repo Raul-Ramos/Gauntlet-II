@@ -7,6 +7,7 @@
 #include "Point.h"
 #include "Directions.h"
 #include "Characters.h"
+#include "Projectile.h"
 
 struct SDL_Texture;
 struct Collider;
@@ -27,6 +28,7 @@ public:
 
 	bool active = false;
 	characters characterType = CHARACTER_WARRIOR;
+	projectile_type projectileType = PROJECTILE_WARRIOR;
 
 	//Controls
 	int attackKey, upKey, downKey, leftKey, rightKey;

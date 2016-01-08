@@ -43,9 +43,9 @@ private:
 
 	//Prints a number x in the screen,
 	//position being the leftmost number
-	void printNumber(int x, iPoint position, colors color);
+	void printNumber(const int x, const iPoint position, const colors color);
 	//Gets the digits of a number
-	void getDigits(int x, std::vector<int>* digits);
+	void getDigits(const int x, std::vector<int>* digits);
 };
 
 #endif // __MODULEINTERFACE_H__

@@ -5,6 +5,7 @@
 #include "Module.h"
 #include "Particle.h"
 #include "Projectile.h"
+#include <vector>
 
 class ModuleParticles : public Module
 {
@@ -19,7 +20,7 @@ public:
 	bool CleanUp();
 
 	void AddParticles(Particle* particle);
-	Projectile* CreateProjectile(projectile_type type, fPoint position, Facing facing, SDL_Texture* graphics, ModulePlayer* sender = nullptr);
+	Projectile* CreateProjectile(const projectile_type type, const fPoint position, const Facing facing, SDL_Texture* graphics, ModulePlayer* sender = nullptr);
 
 private:
 

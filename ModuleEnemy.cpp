@@ -184,8 +184,14 @@ void ModuleEnemy::OnCollision(Collider* col1, Collider* col2){
 
 	case COLLIDER_PROJECTILE: {
 		Projectile* projectile = dynamic_cast<Projectile*>(col2->father);
-		life -= projectile->damage;
-		if (life < 0 && projectile->sender != nullptr) projectile->sender->score += 10;
+		if (projectile->sender != this){
+			life -= projectile->damage;
+			if (life < 0 && projectile->sender != nullptr){
+				ModulePlayer* player = dynamic_cast<ModulePlayer*> (projectile->sender);
+				if (player != NULL)
+					player->score += 10;
+			}
+		}
 		break;
 	}
 

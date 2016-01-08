@@ -95,7 +95,7 @@ update_status ModuleGUI::Update(){
 	return UPDATE_CONTINUE;
 }
 
-void ModuleGUI::printNumber(int x, iPoint position, colors color){
+void ModuleGUI::printNumber(const int x, const iPoint position, const colors color){
 	vector<int>* digits = new vector<int>();
 	getDigits(x, digits);
 	for (int i = 0; i < digits->size(); i++)
@@ -103,7 +103,7 @@ void ModuleGUI::printNumber(int x, iPoint position, colors color){
 	delete digits;
 }
 
-void ModuleGUI::getDigits(int x, vector<int>* digits)
+void ModuleGUI::getDigits(const int x, vector<int>* digits)
 {
 	if (x >= 10)
 		getDigits(x / 10, digits);
