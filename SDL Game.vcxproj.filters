@@ -106,6 +106,15 @@
     <ClInclude Include="ModulePlayers.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="SoundLibrary.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSuccesion.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterColors.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -172,6 +181,9 @@
       <Filter>Game Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModulePlayers.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundLibrary.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
   </ItemGroup>

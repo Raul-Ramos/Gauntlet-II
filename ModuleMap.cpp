@@ -7,6 +7,7 @@
 #include "ModulePlayers.h"
 #include "ModulePlayer.h"
 #include "ModuleEnemies.h"
+#include "SoundLibrary.h"
 #include "Animation.h"
 #include <sstream>
 
@@ -475,6 +476,7 @@ void Door::OnCollision(Collider* col1, Collider* col2){
 					App->map->doors[i]->collider->toDelete = true;
 				}
 			}
+			App->soundLib->playSound(SOUND_OPEN_DOOR);
 		}
 	}
 }

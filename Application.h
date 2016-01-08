@@ -17,6 +17,7 @@ class ModuleCollisions;
 class ModuleParticles;
 class ModuleMap;
 class ModuleGUI;
+class SoundLibrary;
 
 class Application
 {
@@ -42,6 +43,7 @@ public:
 	ModuleEnemies* enemies;
 	ModuleGUI* GUI;
 	ModuleFadeToBlack* fade;
+	SoundLibrary* soundLib;
 
 private:
 

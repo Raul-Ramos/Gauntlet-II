@@ -6,6 +6,8 @@
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
 #include "ModuleParticles.h"
+#include "SoundLibrary.h"
+#include "SoundSuccesion.h"
 #include "SDL/include/SDL.h"
 
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
@@ -50,6 +52,7 @@ bool ModulePlayer::CleanUp()
 // Update
 update_status ModulePlayer::PreUpdate()
 {
+
 	if (active){
 
 		int facingH = 0;
@@ -102,6 +105,15 @@ update_status ModulePlayer::PreUpdate()
 		++actualShootCooldown;
 
 	} //END_ACTIVE
+	else {
+
+		//Character type change
+		if (App->input->GetKey(rightKey) == KEY_REPEAT) characterType = CHARACTER_VALKYRIE;
+		if (App->input->GetKey(leftKey) == KEY_REPEAT) characterType = CHARACTER_ELF;
+		if (App->input->GetKey(upKey) == KEY_REPEAT) characterType = CHARACTER_WARRIOR;
+		if (App->input->GetKey(downKey) == KEY_REPEAT) characterType = CHARACTER_WIZARD;
+	
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -110,6 +122,31 @@ update_status ModulePlayer::Update(){
 
 	if (active) {
 
+		//// CRITICAL STATE ////
+		//The player gets in their correct critical state
+		if (health <= 200){
+			if (criticalState != state_minus_200){
+				SoundSuccesion* succesion = characterSoundSuccesion();
+				succesion->succesion.push_back({ SOUND_NARRATOR_DYING, 0 });
+				App->soundLib->AddSoundSuccesion(succesion);
+				criticalState = state_minus_200;
+			}
+		}
+		else if (health <= 500 && criticalState != state_minus_500){
+
+			SoundSuccesion* succesion = characterSoundSuccesion();
+			float result = rand() % 2;
+			if (result > 1) succesion->succesion.push_back({ SOUND_NARRATOR_LOW_LIFE, 0 });
+			else succesion->succesion.push_back({ SOUND_NARRATOR_LOW_LIFE_2, 0 });
+			App->soundLib->AddSoundSuccesion(succesion);
+			criticalState = state_minus_500;
+
+		}
+		else if (health > 500 && criticalState != state_stable){
+			criticalState = state_stable;
+		}
+
+		//// MOVEMENT ////
 		//Whatever you're animated or not
 		bool move = false;
 
@@ -170,4 +207,51 @@ void ModulePlayer::OnCollision(Collider* col1, Collider* col2){
 	default:
 		break;
 	}
+}
+
+//Returns a sound succession with is color and class
+SoundSuccesion* ModulePlayer::characterSoundSuccesion(){
+	SoundSuccesion* succesion = new SoundSuccesion();
+
+	switch (color)
+	{
+	case COLOR_RED:
+		succesion->succesion.push_back({ SOUND_NARRATOR_RED, 240 });
+		break;
+	case COLOR_BLUE:
+		succesion->succesion.push_back({ SOUND_NARRATOR_BLUE, 305 });
+		break;
+	case COLOR_YELLOW:
+		succesion->succesion.push_back({ SOUND_NARRATOR_YELLOW, 387 });
+		break;
+	case COLOR_GREEN:
+		succesion->succesion.push_back({ SOUND_NARRATOR_GREEN, 241 });
+		break;
+	default:
+		break;
+	}
+
+	switch (characterType)
+	{
+	case CHARACTER_WARRIOR:
+		succesion->succesion.push_back({ SOUND_WARRIOR_NAME, 504 });
+		break;
+
+	case CHARACTER_VALKYRIE:
+		succesion->succesion.push_back({ SOUND_VALKYRIE_NAME, 487 });
+		break;
+
+	case CHARACTER_WIZARD:
+		succesion->succesion.push_back({ SOUND_WIZARD_NAME, 551 });
+		break;
+
+	case CHARACTER_ELF:
+		succesion->succesion.push_back({ SOUND_ELF_NAME, 332 });
+		break;
+
+	default:
+		break;
+	}
+
+	return succesion;
 }

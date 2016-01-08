@@ -1,10 +1,11 @@
 #include "ModuleParticles.h"
 #include "Application.h"
 #include "ModuleTextures.h"
-#include "SDL/include/SDL.h"
 #include "Directions.h"
 #include "ModuleCollisions.h"
 #include "ModulePlayer.h"
+#include "SoundLibrary.h"
+#include "SDL/include/SDL.h"
 
 ModuleParticles::ModuleParticles()
 {
@@ -100,6 +101,7 @@ Projectile* ModuleParticles::CreateProjectile(const projectile_type type, const 
 				projectile->animation.frames.push_back({ 18 * (24 + i) + 1, yValue, dim, dim });
 			}
 			projectile->animation.speed = 0.5f;
+			App->soundLib->playSound(SOUND_WARRIOR_ATTACK);
 
 			break;
 		}
@@ -109,6 +111,7 @@ Projectile* ModuleParticles::CreateProjectile(const projectile_type type, const 
 			int firstImage = 10 * 44 + 17;
 			projectile->animation.frames.push_back({ (18 * ((firstImage + facing) % 44)) + 1, (18 * ((firstImage + facing) / 44)) + 1, dim, dim });
 			projectile->animation.speed = 0.0f;
+			App->soundLib->playSound(SOUND_VALKYRIE_ATTACK);
 
 			break;
 		}
@@ -118,6 +121,7 @@ Projectile* ModuleParticles::CreateProjectile(const projectile_type type, const 
 			int firstImage = 11 * 44 + 10;
 			projectile->animation.frames.push_back({ (18 * ((firstImage + facing) % 44)) + 1, (18 * ((firstImage + facing) / 44)) + 1, dim, dim });
 			projectile->animation.speed = 0.0f;
+			App->soundLib->playSound(SOUND_WIZARD_ATTACK);
 
 			break;
 	}
@@ -127,6 +131,7 @@ Projectile* ModuleParticles::CreateProjectile(const projectile_type type, const 
 			int firstImage = 12 * 44 + 3;
 			projectile->animation.frames.push_back({ (18 * ((firstImage + facing) % 44)) + 1, (18 * ((firstImage + facing) / 44)) + 1, dim, dim });
 			projectile->animation.speed = 0.0f;
+			App->soundLib->playSound(SOUND_ELF_ATTACK);
 
 			break;
 	}

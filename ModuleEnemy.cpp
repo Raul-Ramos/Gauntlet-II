@@ -7,6 +7,7 @@
 #include "ModulePlayers.h"
 #include "ModulePlayer.h"
 #include "Projectile.h"
+#include "SoundLibrary.h"
 #include "SDL/include/SDL.h"
 #include <math.h>
 
@@ -179,6 +180,7 @@ void ModuleEnemy::OnCollision(Collider* col1, Collider* col2){
 		player->health -= 9;
 		life = 0;
 		player->score += 10;
+		App->soundLib->playSound(SOUND_GHOST_ATTACK);
 		break;
 	}
 

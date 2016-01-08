@@ -73,8 +73,8 @@ update_status ModuleGUI::Update(){
 	colors color;
 
 	for (int i = 0; i < 4; i++){
-		color = static_cast<colors>(i);
 		player = App->players->players[i];
+		color = player->color;
 
 		App->renderer->Blit(interfaceGraphics, 256, base, &characters[color][player->characterType], 0.0F);
 		App->renderer->Blit(interfaceGraphics, 238, base + 8, &ScoreHealth[color], 0.0F);

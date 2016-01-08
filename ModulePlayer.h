@@ -8,9 +8,17 @@
 #include "Directions.h"
 #include "Characters.h"
 #include "Projectile.h"
+#include "CharacterColors.h"
 
 struct SDL_Texture;
 struct Collider;
+struct SoundSuccesion;
+
+enum critical_state {
+	state_stable,
+	state_minus_500,
+	state_minus_200
+};
 
 class ModulePlayer : public Module
 {
@@ -24,11 +32,15 @@ public:
 	bool CleanUp();
 	void OnCollision(Collider* c1, Collider* c2);
 
+	//Returns a sound succession with is color and class
+	SoundSuccesion* characterSoundSuccesion();
+
 public:
 
 	bool active = false;
 	characters characterType = CHARACTER_WARRIOR;
 	projectile_type projectileType = PROJECTILE_WARRIOR;
+	colors color;
 
 	//Controls
 	int attackKey, upKey, downKey, leftKey, rightKey;
@@ -38,7 +50,7 @@ public:
 	int health = 0;
 	int numKeys = 0;
 
-	int shootCooldown = 45;
+	int shootCooldown = 38;
 	int actualShootCooldown = shootCooldown;
 
 	SDL_Texture* graphics = nullptr;
@@ -47,6 +59,12 @@ public:
 
 	Animation animations[8];
 	Collider* collider;
+
+private:
+
+	//Goes to 1 when < 500 and to 2 when < 200,
+	//used for sound alarm
+	critical_state criticalState = state_stable;
 
 };
 

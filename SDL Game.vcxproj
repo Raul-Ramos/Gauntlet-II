@@ -73,6 +73,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="CharacterColors.h" />
     <ClInclude Include="Directions.h" />
     <ClInclude Include="Enemies.h" />
     <ClInclude Include="EnemySpawn.h" />
@@ -97,6 +98,8 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="SoundLibrary.h" />
+    <ClInclude Include="SoundSuccesion.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +124,7 @@
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="SoundLibrary.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

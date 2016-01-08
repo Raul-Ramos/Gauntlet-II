@@ -5,15 +5,8 @@
 #include "Module.h"
 #include "Characters.h"
 #include "Point.h"
+#include "CharacterColors.h"
 #include <vector>
-
-enum colors {
-	COLOR_RED = 0,
-	COLOR_BLUE,
-	COLOR_YELLOW,
-	COLOR_GREEN,
-	COLOR_WHITE
-};
 
 struct SDL_Texture;
 

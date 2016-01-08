@@ -11,6 +11,7 @@
 #include "ModuleEnemies.h"
 #include "ModuleMap.h"
 #include "ModuleGUI.h"
+#include "SoundLibrary.h"
 
 using namespace std;
 
@@ -33,6 +34,7 @@ Application::Application()
 	modules.push_back(players = new ModulePlayers());
 	modules.push_back(GUI = new ModuleGUI());
 	modules.push_back(fade = new ModuleFadeToBlack());
+	modules.push_back(soundLib = new SoundLibrary());
 }
 
 Application::~Application()

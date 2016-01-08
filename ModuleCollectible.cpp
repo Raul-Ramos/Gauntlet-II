@@ -5,6 +5,7 @@
 #include "ModuleTextures.h"
 #include "ModulePlayer.h"
 #include "ModuleMap.h"
+#include "SoundLibrary.h"
 #include "Animation.h"
 
 ModuleCollectible::ModuleCollectible(const TypeCollectible type) : Module(), type(type)
@@ -39,16 +40,19 @@ void ModuleCollectible::OnCollision(Collider* col1, Collider* col2){
 		case COLLECTIBLE_TREASURE: {
 			ModulePlayer * player = dynamic_cast<ModulePlayer*>(col2->father); //TODO: If it's common on everyone, declare outside
 			player->score += 100;
+			App->soundLib->playSound(SOUND_TAKE_TREASURE);
 			break; }
 		case COLLECTIBLE_MEAT:
 		case COLLECTIBLE_DRINK:{
 			ModulePlayer * player = dynamic_cast<ModulePlayer*>(col2->father);
 			player->health += 100;
+			App->soundLib->playSound(SOUND_TAKE_FOOD);
 			break; }
 		case COLLECTIBLE_KEY: {
 			ModulePlayer * player = dynamic_cast<ModulePlayer*>(col2->father);
 			player->score += 100;
 			player->numKeys += 1;
+			App->soundLib->playSound(SOUND_TAKE_KEY);
 			break; }
 		case COLLECTIBLE_EXIT:
 			break;
@@ -56,6 +60,7 @@ void ModuleCollectible::OnCollision(Collider* col1, Collider* col2){
 			break;
 		case COLLECTIBLE_FLOOR_TRIGGER:
 			floorTriggerFunction();
+			App->soundLib->playSound(SOUND_FLOOR_TRIGGER);
 		default:
 			break;
 		}

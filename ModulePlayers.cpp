@@ -5,6 +5,9 @@
 #include "ModuleInput.h"
 #include "ModuleCollisions.h"
 #include "ModuleRender.h"
+#include "SoundLibrary.h"
+#include "SoundSuccesion.h"
+#include "CharacterColors.h"
 #include "SDL/include/SDL_scancode.h"
 #include <vector>
 
@@ -23,6 +26,12 @@ ModulePlayers::ModulePlayers(){
 	players[1]->characterType = CHARACTER_VALKYRIE;
 	players[2]->characterType = CHARACTER_WIZARD;
 	players[3]->characterType = CHARACTER_ELF;
+
+	//Colors
+	players[0]->color = COLOR_RED;
+	players[1]->color = COLOR_BLUE;
+	players[2]->color = COLOR_YELLOW;
+	players[3]->color = COLOR_GREEN;
 
 	//Keys
 	playerJoinButton[0] = SDL_SCANCODE_F1;
@@ -54,9 +63,6 @@ ModulePlayers::ModulePlayers(){
 	players[3]->leftKey = SDL_SCANCODE_KP_4;
 	players[3]->rightKey = SDL_SCANCODE_KP_6;
 
-	//The first player joins
-	joinPlayer(0);
-
 };
 
 ModulePlayers::~ModulePlayers(){
@@ -68,6 +74,9 @@ bool ModulePlayers::Start(){
 
 	for (int i = 0; i < 4; i++)
 		players[i]->Start();
+
+	//The first player joins
+	joinPlayer(0);
 
 	return true;
 };
@@ -159,7 +168,7 @@ void ModulePlayers::OnCollision(Collider* c1, Collider* c2){
 }
 
 void ModulePlayers::joinPlayer(const int i){
-	
+
 	//Grid position of the first image. Y * 44 + X
 	int firstImage = 0; 
 
@@ -201,6 +210,11 @@ void ModulePlayers::joinPlayer(const int i){
 		players[i]->animations[anim].frames.push_back({ (18 * ((firstImage + anim + (8 * 0)) % 44)) + 1, (18 * ((firstImage + anim + (8 * 0)) / 44)) + 1, dim, dim });
 		players[i]->animations[anim].frames.push_back({ (18 * ((firstImage + anim + (8 * 2)) % 44)) + 1, (18 * ((firstImage + anim + (8 * 2)) / 44)) + 1, dim, dim });
 	}
+
+	//Creates the sound succesion announcing the player joining
+	SoundSuccesion* succesion = players[i]->characterSoundSuccesion();
+	succesion->succesion.insert(succesion->succesion.begin(), { SOUND_NARRATOR_WELCOME, 600 });
+	App->soundLib->AddSoundSuccesion(succesion);
 
 	//Initializes the player
 	players[i]->health = 2000;
