@@ -22,6 +22,9 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	animations[DOWNLEFT].speed = 0.15f;
 	animations[LEFT].speed = 0.15f;
 	animations[UPLEFT].speed = 0.15f;
+
+	//Starts the life lost time
+	lastLifeLostTime = SDL_GetTicks();
 }
 
 ModulePlayer::~ModulePlayer()
@@ -121,6 +124,13 @@ update_status ModulePlayer::PreUpdate()
 update_status ModulePlayer::Update(){
 
 	if (active) {
+
+		//Loses 1 of life every second
+		Uint32 time = SDL_GetTicks();
+		if (time > lastLifeLostTime + 1000){
+			--health;
+			lastLifeLostTime = time;
+		}
 
 		//// CRITICAL STATE ////
 		//The player gets in their correct critical state

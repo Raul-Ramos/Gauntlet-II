@@ -9,6 +9,7 @@
 #include "Characters.h"
 #include "Projectile.h"
 #include "CharacterColors.h"
+#include "SDL\include\SDL_stdinc.h"
 
 struct SDL_Texture;
 struct Collider;
@@ -50,12 +51,12 @@ public:
 	int health = 0;
 	int numKeys = 0;
 
-	int shootCooldown = 38;
-	int actualShootCooldown = shootCooldown;
-
 	SDL_Texture* graphics = nullptr;
 	fPoint position;
 	Facing facing = DOWN;
+
+	//When the player lost life naturally last time
+	Uint32 lastLifeLostTime;
 
 	Animation animations[8];
 	Collider* collider;
@@ -66,6 +67,9 @@ private:
 	//used for sound alarm
 	critical_state criticalState = state_stable;
 
+	//Shooting cooldown
+	int shootCooldown = 38;
+	int actualShootCooldown = shootCooldown;
 };
 
 #endif // __MODULEPLAYER_H__

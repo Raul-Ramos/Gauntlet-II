@@ -25,7 +25,7 @@ struct SpawnPoint : Module {
 	SDL_Texture* graphics = nullptr;
 	Animation animation;
 
-	int baseTimeToSpawn = 3000;
+	int baseTimeToSpawn = 2500;
 	int timeToSpawn = 0;
 	Uint32 timeLastSpawn = timeLastSpawn;
 	int life = 1;

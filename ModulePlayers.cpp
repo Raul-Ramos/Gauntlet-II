@@ -9,6 +9,7 @@
 #include "SoundSuccesion.h"
 #include "CharacterColors.h"
 #include "SDL/include/SDL_scancode.h"
+#include "SDL\\include\SDL_timer.h"
 #include <vector>
 
 ModulePlayers::ModulePlayers(){
@@ -45,11 +46,11 @@ ModulePlayers::ModulePlayers(){
 	players[0]->leftKey = SDL_SCANCODE_S;
 	players[0]->rightKey = SDL_SCANCODE_F;
 
-	players[1]->attackKey = SDL_SCANCODE_Y;
-	players[1]->upKey = SDL_SCANCODE_I;
-	players[1]->downKey = SDL_SCANCODE_K;
-	players[1]->leftKey = SDL_SCANCODE_J;
-	players[1]->rightKey = SDL_SCANCODE_L;
+	players[1]->attackKey = SDL_SCANCODE_T;
+	players[1]->upKey = SDL_SCANCODE_U;
+	players[1]->downKey = SDL_SCANCODE_J;
+	players[1]->leftKey = SDL_SCANCODE_H;
+	players[1]->rightKey = SDL_SCANCODE_K;
 
 	players[2]->attackKey = SDL_SCANCODE_RSHIFT;
 	players[2]->upKey = SDL_SCANCODE_UP;

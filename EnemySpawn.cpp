@@ -45,12 +45,25 @@ update_status SpawnPoint::PreUpdate(){
 
 	Uint32 time = SDL_GetTicks();
 
-	//If it can create a new monster, create temporal colliders
+	//Check if enough time has passed so a new enemy can be created
 	if (time > timeLastSpawn + timeToSpawn){
-		colliders[CDIRECTION_LEFT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x - 16, position.y, 16, 16 }, this);
-		colliders[CDIRECTION_RIGHT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x + 16, position.y, 16, 16 }, this);
-		colliders[CDIRECTION_UP] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x, position.y - 16, 16, 16 }, this);
-		colliders[CDIRECTION_DOWN] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x, position.y + 16, 16, 16 }, this);
+
+		fRect spawner = colliders[0]->box;
+		fRect camera = {
+			-App->renderer->camera.x / 2, -App->renderer->camera.y / 2,
+			(App->renderer->camera.w / 2) - 112, (App->renderer->camera.h / 2) - 4 };
+
+		//Check if the spawner is within the camera view
+		if (spawner.x < camera.x + camera.w && spawner.x + spawner.w > camera.x &&
+			spawner.y < camera.y + camera.h && spawner.y + spawner.h > camera.y){
+
+			//If it can create a new monster, create temporal colliders
+			colliders[CDIRECTION_LEFT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x - 16, position.y, 16, 16 }, this);
+			colliders[CDIRECTION_RIGHT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x + 16, position.y, 16, 16 }, this);
+			colliders[CDIRECTION_UP] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x, position.y - 16, 16, 16 }, this);
+			colliders[CDIRECTION_DOWN] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x, position.y + 16, 16, 16 }, this);
+
+		}
 	}
 
 	return UPDATE_CONTINUE;
@@ -92,7 +105,7 @@ update_status SpawnPoint::Update(){
 			App->enemies->AddEnemy(freeSpawnSpaces.at(rand() % freeSpawnSpaces.size()));
 
 			//Sets the next spawn time with some random percent offset
-			int min = 20, max = 110;
+			int min = 30, max = 110;
 			float offset = rand() % (max - min + 1) + min;
 			timeToSpawn = baseTimeToSpawn * (offset / 100);
 
