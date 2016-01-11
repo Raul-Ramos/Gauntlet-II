@@ -120,6 +120,7 @@ SpawnPoint* ModuleEnemies::AddSpawnPoint(const enemyType type, const fPoint posi
 	}
 	
 	spawnPoints.push_back(spawnPoint);
+	spawnPoint->Start();
 
 	return spawnPoint;
 }

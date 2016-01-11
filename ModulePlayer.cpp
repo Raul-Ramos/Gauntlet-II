@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModulePlayer.h"
+#include "ModulePlayers.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
@@ -125,6 +126,11 @@ update_status ModulePlayer::Update(){
 
 	if (active) {
 
+		if (health < 0){
+			App->players->playerDies(this);
+			return UPDATE_CONTINUE;
+		}
+		
 		//Loses 1 of life every second
 		Uint32 time = SDL_GetTicks();
 		if (time > lastLifeLostTime + 1000){

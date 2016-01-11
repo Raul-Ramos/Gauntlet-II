@@ -149,6 +149,12 @@ update_status ModulePlayers::Update(){
 		playerJoining = 0;
 	}
 
+	//If it's game over and enough time has passed, restart
+	if (beginGameOver != -1 && beginGameOver + 5000 < SDL_GetTicks()){
+		App->restart = true;
+		beginGameOver = -1;
+	}
+
 	return UPDATE_CONTINUE;
 };
 
@@ -235,6 +241,31 @@ void ModulePlayers::joinPlayer(const int i){
 	players[i]->Start();
 
 };
+
+//Used when a player dies
+void ModulePlayers::playerDies(ModulePlayer* player){
+
+	player->health = 0;
+	player->active = false;
+	player->collider->toDelete = true;
+	
+	//Puts an skeleton in his position
+	App->enemies->AddSpawnPoint(ENEMYTYPE_GHOST, player->position);
+
+	//Checks if the other players are dead too
+	bool allDead = true;
+	for (size_t i = 0; i < 4; i++){
+		if (players[i]->active == true){
+			allDead = false;
+			break;
+		}
+	}
+
+	//If they're all dead, begin the end
+	if (allDead){
+		beginGameOver = SDL_GetTicks();
+	}
+}
 
 //Adjusts the camera given the players position
 void ModulePlayers::adjustCamera(){
