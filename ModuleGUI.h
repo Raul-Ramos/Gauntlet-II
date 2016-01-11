@@ -5,8 +5,13 @@
 #include "Module.h"
 #include "Characters.h"
 #include "Point.h"
-#include "CharacterColors.h"
+#include "Gauntlet_Colors.h"
 #include <vector>
+
+enum GUI_STATE {
+	GUI_STATE_PLAYER_SELECT,
+	GUI_STATE_GAME
+};
 
 struct SDL_Texture;
 
@@ -20,10 +25,15 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	GUI_STATE state = GUI_STATE_PLAYER_SELECT;
+
 private:
+
+	SDL_Texture* playerSelectGraphics = nullptr;
 	SDL_Texture* borderGraphics = nullptr;
 	SDL_Texture* interfaceGraphics = nullptr;
 
+	SDL_Rect playerSelect;
 	SDL_Rect border;
 
 	SDL_Rect level;
@@ -36,9 +46,10 @@ private:
 
 	//Prints a number x in the screen,
 	//position being the leftmost number
-	void printNumber(const int x, const iPoint position, const colors color);
+	void printNumber(const int x, const iPoint position, const Gauntlet_Colors color);
 	//Gets the digits of a number
 	void getDigits(const int x, std::vector<int>* digits);
+
 };
 
 #endif // __MODULEINTERFACE_H__

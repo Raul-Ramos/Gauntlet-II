@@ -56,9 +56,9 @@ update_status ModuleCollisions::Update()
 	Collider* c2;
 
 	//Does every element with every other element except itself
-	for (int y = 0; y < colliders.size() - 1; y++){
+	for (int y = 0; y + 1 < colliders.size(); y++){
 
-		c1 = colliders.at(y);
+		c1 = colliders[y];
 
 		for (int x = y + 1; x < colliders.size(); x++){
 

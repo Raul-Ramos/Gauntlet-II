@@ -12,7 +12,7 @@ struct SDL_Texture;
 
 struct Particle : Module
 {
-	Particle();
+	Particle(fPoint position, SDL_Texture* graphics);
 	~Particle();
 
 	void MarkForDead();
@@ -20,11 +20,11 @@ struct Particle : Module
 
 	SDL_Texture* graphics = nullptr;
 	fPoint position;
-	iPoint speed;
-	Collider* collider;
-	Animation animation;
+	iPoint speed = { 0, 0 };
+	Collider* collider = nullptr;
+	Animation* animation;
 	Uint32 begun;
-	Uint32 duration;
+	Uint32 duration = -1;
 
 	virtual update_status Update();
 

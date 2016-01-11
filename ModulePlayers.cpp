@@ -2,15 +2,12 @@
 #include "ModulePlayers.h"
 #include "ModulePlayer.h"
 #include "ModuleMap.h"
+#include "ModuleEnemies.h"
 #include "ModuleInput.h"
+#include "ModuleGUI.h"
 #include "ModuleCollisions.h"
 #include "ModuleRender.h"
-#include "SoundLibrary.h"
 #include "SoundSuccesion.h"
-#include "CharacterColors.h"
-#include "SDL/include/SDL_scancode.h"
-#include "SDL\\include\SDL_timer.h"
-#include <vector>
 
 ModulePlayers::ModulePlayers(){
 
@@ -71,17 +68,6 @@ ModulePlayers::~ModulePlayers(){
 		delete players[i];
 };
 
-bool ModulePlayers::Start(){
-
-	for (int i = 0; i < 4; i++)
-		players[i]->Start();
-
-	//The first player joins
-	joinPlayer(0);
-
-	return true;
-};
-
 update_status ModulePlayers::PreUpdate(){
 	for (int i = 0; i < 4; i++)
 		players[i]->PreUpdate();
@@ -90,12 +76,38 @@ update_status ModulePlayers::PreUpdate(){
 	for (int i = 0; i < 4; i++){
 		//If they push the button and they're not active
 		if (App->input->GetKey(playerJoinButton[i]) && !(players[i]->active)){
-			//Create a spawnPoint collider up, down, left and right to the first player
-			playerJoining = i;
-			playerJoinSpawnPoints[PSDIRECTION_UP] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { players[0]->position.x, players[0]->position.y - 16, 16, 16 }, this);
-			playerJoinSpawnPoints[PSDIRECTION_DOWN] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { players[0]->position.x, players[0]->position.y + 16, 16, 16 }, this);
-			playerJoinSpawnPoints[PSDIRECTION_LEFT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { players[0]->position.x - 16, players[0]->position.y, 16, 16 }, this);
-			playerJoinSpawnPoints[PSDIRECTION_RIGHT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { players[0]->position.x + 16, players[0]->position.y, 16, 16 }, this);
+
+			//Sees if any player is already active
+			int anyActive = -1;
+			for (int z = 0; z < 4; z++){
+				if (players[z]->active){
+					anyActive = z;
+					break;
+				}
+			}
+			
+			if (anyActive != -1){
+				//If there are players active, create a spawnPoint collider up, down, left and right to the first found active player
+				playerJoining = i;
+				playerJoinSpawnPoints[PSDIRECTION_UP] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { players[anyActive]->position.x, players[anyActive]->position.y - 16, 16, 16 }, this);
+				playerJoinSpawnPoints[PSDIRECTION_DOWN] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { players[anyActive]->position.x, players[anyActive]->position.y + 16, 16, 16 }, this);
+				playerJoinSpawnPoints[PSDIRECTION_LEFT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { players[anyActive]->position.x - 16, players[anyActive]->position.y, 16, 16 }, this);
+				playerJoinSpawnPoints[PSDIRECTION_RIGHT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { players[anyActive]->position.x + 16, players[anyActive]->position.y, 16, 16 }, this);
+				
+			} else {
+				//If there are no players active, the game starts;
+				//active the map and enemies module
+				App->map->Enable();
+				App->enemies->Enable();
+
+				//End the player select state
+				App->GUI->state = GUI_STATE_GAME;
+
+				//and spawn in the first players position (it is assigned by module map)
+				players[i]->position = App->map->startingPosition;
+				joinPlayer(i);
+			}
+
 			break;
 		}
 	}
@@ -220,6 +232,7 @@ void ModulePlayers::joinPlayer(const int i){
 	//Initializes the player
 	players[i]->health = 2000;
 	players[i]->active = true;
+	players[i]->Start();
 
 };
 
@@ -233,35 +246,29 @@ void ModulePlayers::adjustCamera(){
 	std::vector<ModulePlayer*> uppestPlayer;
 	std::vector<ModulePlayer*> downestPlayer;
 
-	//Puts the first players, as he's always playing
-	leftmostPlayer.push_back(players[0]);
-	rightestPlayer.push_back(players[0]);
-	uppestPlayer.push_back(players[0]);
-	downestPlayer.push_back(players[0]);
-
 	//Searches the players in the extremes
-	for (int i = 1; i < 4; i++){
+	for (int i = 0; i < 4; i++){
 		if (players[i]->active){
-			if (players[i]->position.x <= leftmostPlayer[0]->position.x){
-				if (players[i]->position.x < leftmostPlayer[0]->position.x){
+			if (leftmostPlayer.size() == 0 || players[i]->position.x <= leftmostPlayer[0]->position.x){
+				if (leftmostPlayer.size() > 0 && players[i]->position.x < leftmostPlayer[0]->position.x){
 					leftmostPlayer.clear();
 				}
 				leftmostPlayer.push_back(players[i]);
 			}
-			if (players[i]->position.x >= rightestPlayer[0]->position.x){
-				if (players[i]->position.x > rightestPlayer[0]->position.x){
+			if (rightestPlayer.size() == 0 || players[i]->position.x >= rightestPlayer[0]->position.x){
+				if (rightestPlayer.size() > 0 && players[i]->position.x > rightestPlayer[0]->position.x){
 					rightestPlayer.clear();
 				}
 				rightestPlayer.push_back(players[i]);
 			}
-			if (players[i]->position.y <= uppestPlayer[0]->position.y){
-				if (players[i]->position.y < uppestPlayer[0]->position.y){
+			if (uppestPlayer.size() == 0 || players[i]->position.y <= uppestPlayer[0]->position.y){
+				if (uppestPlayer.size() > 0 && players[i]->position.y < uppestPlayer[0]->position.y){
 					uppestPlayer.clear();
 				}
 				uppestPlayer.push_back(players[i]);
 			}
-			if (players[i]->position.y >= downestPlayer[0]->position.y){
-				if (players[i]->position.y > downestPlayer[0]->position.y){
+			if (downestPlayer.size() == 0 || players[i]->position.y >= downestPlayer[0]->position.y){
+				if (downestPlayer.size() > 0 && players[i]->position.y > downestPlayer[0]->position.y){
 					downestPlayer.clear();
 				}
 				downestPlayer.push_back(players[i]);
@@ -269,106 +276,110 @@ void ModulePlayers::adjustCamera(){
 		}
 	}
 
-	//If the players are separated by a maximum value (the screen size)...
-	if (rightestPlayer[0]->position.x - leftmostPlayer[0]->position.x > 176){
+	//If there are active players
+	if (rightestPlayer.size() > 0) {
 
-		bool rightToBorder = false;
-		bool leftToBorder = false;
+		//If the players are separated by a maximum value (the screen size)...
+		if (rightestPlayer[0]->position.x - leftmostPlayer[0]->position.x > 176){
 
-		//If the leftmost player doesn't go to the right, he will be outside the border
-		for (int i = 0; i < leftmostPlayer.size(); i++){
-			if (!(leftmostPlayer[i]->collider->box.x > leftmostPlayer[i]->position.x)){
-				leftToBorder = true;
-				break;
-			}
-		}
+			bool rightToBorder = false;
+			bool leftToBorder = false;
 
-		//If the rightest player doesn't go to the left, he will be outside the border
-		for (int i = 0; i < rightestPlayer.size(); i++){
-			if (!(rightestPlayer[i]->collider->box.x < rightestPlayer[i]->position.x)){
-				rightToBorder = true;
-				break;
-			}
-		}
-
-		//If both players are going to be inside the border...
-		if (leftToBorder && rightToBorder){
-
-			//Block their movement
+			//If the leftmost player doesn't go to the right, he will be outside the border
 			for (int i = 0; i < leftmostPlayer.size(); i++){
 				if (!(leftmostPlayer[i]->collider->box.x > leftmostPlayer[i]->position.x)){
-					leftmostPlayer[i]->collider->box.x = leftmostPlayer[i]->position.x;
-					leftmostPlayer[i]->collider->box.x = leftmostPlayer[i]->position.x;
+					leftToBorder = true;
+					break;
 				}
 			}
+
+			//If the rightest player doesn't go to the left, he will be outside the border
 			for (int i = 0; i < rightestPlayer.size(); i++){
 				if (!(rightestPlayer[i]->collider->box.x < rightestPlayer[i]->position.x)){
-					rightestPlayer[i]->collider->box.x = rightestPlayer[i]->position.x;
-					rightestPlayer[i]->collider->box.x = rightestPlayer[i]->position.x;
+					rightToBorder = true;
 					break;
 				}
 			}
-		}
-	}
 
-	//Same in the vertical direction
-	if (downestPlayer[0]->position.y - uppestPlayer[0]->position.y > 176){
+			//If both players are going to be inside the border...
+			if (leftToBorder && rightToBorder){
+
+				//Block their movement
+				for (int i = 0; i < leftmostPlayer.size(); i++){
+					if (!(leftmostPlayer[i]->collider->box.x > leftmostPlayer[i]->position.x)){
+						leftmostPlayer[i]->collider->box.x = leftmostPlayer[i]->position.x;
+						leftmostPlayer[i]->collider->box.x = leftmostPlayer[i]->position.x;
+					}
+				}
+				for (int i = 0; i < rightestPlayer.size(); i++){
+					if (!(rightestPlayer[i]->collider->box.x < rightestPlayer[i]->position.x)){
+						rightestPlayer[i]->collider->box.x = rightestPlayer[i]->position.x;
+						rightestPlayer[i]->collider->box.x = rightestPlayer[i]->position.x;
+						break;
+					}
+				}
+			}
+		}
+
+		//Same in the vertical direction
+		if (downestPlayer[0]->position.y - uppestPlayer[0]->position.y > 176){
 		
-		bool rightToBorder = false;
-		bool leftToBorder = false;
+			bool rightToBorder = false;
+			bool leftToBorder = false;
 
-		for (int i = 0; i < uppestPlayer.size(); i++){
-			if (!(uppestPlayer[i]->collider->box.y > uppestPlayer[i]->position.y)){
-				leftToBorder = true;
-				break;
-			}
-		}
-
-		for (int i = 0; i < downestPlayer.size(); i++){
-			if (!(downestPlayer[i]->collider->box.y < downestPlayer[i]->position.y)){
-				rightToBorder = true;
-				break;
-			}
-		}
-
-		if (leftToBorder && rightToBorder){
 			for (int i = 0; i < uppestPlayer.size(); i++){
 				if (!(uppestPlayer[i]->collider->box.y > uppestPlayer[i]->position.y)){
-					uppestPlayer[i]->collider->box.y = uppestPlayer[i]->position.y;
-					uppestPlayer[i]->collider->box.y = uppestPlayer[i]->position.y;
-				}
-			}
-			for (int i = 0; i < downestPlayer.size(); i++){
-				if (!(downestPlayer[i]->collider->box.y < downestPlayer[i]->position.y)){
-					downestPlayer[i]->collider->box.y = downestPlayer[i]->position.y;
-					downestPlayer[i]->collider->box.y = downestPlayer[i]->position.y;
+					leftToBorder = true;
 					break;
 				}
 			}
+
+			for (int i = 0; i < downestPlayer.size(); i++){
+				if (!(downestPlayer[i]->collider->box.y < downestPlayer[i]->position.y)){
+					rightToBorder = true;
+					break;
+				}
+			}
+
+			if (leftToBorder && rightToBorder){
+				for (int i = 0; i < uppestPlayer.size(); i++){
+					if (!(uppestPlayer[i]->collider->box.y > uppestPlayer[i]->position.y)){
+						uppestPlayer[i]->collider->box.y = uppestPlayer[i]->position.y;
+						uppestPlayer[i]->collider->box.y = uppestPlayer[i]->position.y;
+					}
+				}
+				for (int i = 0; i < downestPlayer.size(); i++){
+					if (!(downestPlayer[i]->collider->box.y < downestPlayer[i]->position.y)){
+						downestPlayer[i]->collider->box.y = downestPlayer[i]->position.y;
+						downestPlayer[i]->collider->box.y = downestPlayer[i]->position.y;
+						break;
+					}
+				}
+			}
 		}
+
+		//Camera position
+
+		//Position is 2*(16 + 88) - ( x * 2) - ( y - x )
+		//Where the first numbers are the left interface border and half the game screen * 2,
+		//x is the leftmost/uppest player and y is the rightest/downest player
+		App->renderer->camera.x = 208 - leftmostPlayer[0]->position.x - rightestPlayer[0]->position.x;
+		App->renderer->camera.y = 208 - uppestPlayer[0]->position.y - downestPlayer[0]->position.y;
+
+		//Left border = ((16 - 4) * 2), as one brick in the wall is not visible 
+		if (App->renderer->camera.x > 24)
+			App->renderer->camera.x = 24;
+
+		//Right border = - (mapWidth * tileSize) - (rightInterfaceSize + brick)
+		if (App->renderer->camera.x < -(App->map->width * 16) - 112 + 8)
+			App->renderer->camera.x = -(App->map->width * 16) - 112 + 8;
+
+		//Up border = 5, the interface
+		if (App->renderer->camera.y > 5)
+			App->renderer->camera.y = 5;
+
+		//Down border = - (mapHeight * tileSize) - (downInterfaceSize + brick)
+		if (App->renderer->camera.y < -(App->map->height * 16) - 134 + 8)
+			App->renderer->camera.y = -(App->map->height * 16) - 134 + 8;
 	}
-
-	//Camera position
-
-	//Position is 2*(16 + 88) - ( x * 2) - ( y - x )
-	//Where the first numbers are the left interface border and half the game screen * 2,
-	//x is the leftmost/uppest player and y is the rightest/downest player
-	App->renderer->camera.x = 208 - leftmostPlayer[0]->position.x - rightestPlayer[0]->position.x;
-	App->renderer->camera.y = 208 - uppestPlayer[0]->position.y - downestPlayer[0]->position.y;
-
-	//Left border = ((16 - 4) * 2), as one brick in the wall is not visible 
-	if (App->renderer->camera.x > 24)
-		App->renderer->camera.x = 24;
-
-	//Right border = - (mapWidth * tileSize) - (rightInterfaceSize + brick)
-	if (App->renderer->camera.x < -(App->map->width * 16) - 112 + 8)
-		App->renderer->camera.x = -(App->map->width * 16) - 112 + 8;
-
-	//Up border = 5, the interface
-	if (App->renderer->camera.y > 5)
-		App->renderer->camera.y = 5;
-
-	//Down border = - (mapHeight * tileSize) - (downInterfaceSize + brick)
-	if (App->renderer->camera.y < -(App->map->height * 16) - 134 + 8)
-		App->renderer->camera.y = -(App->map->height * 16) - 134 + 8;
 }

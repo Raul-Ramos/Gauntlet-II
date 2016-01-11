@@ -30,6 +30,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void Restart();
+
 public:
 	ModuleRender* renderer;
 	ModuleWindow* window;
@@ -44,6 +46,8 @@ public:
 	ModuleGUI* GUI;
 	ModuleFadeToBlack* fade;
 	SoundLibrary* soundLib;
+
+	bool restart = false;
 
 private:
 

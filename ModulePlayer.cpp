@@ -6,9 +6,8 @@
 #include "ModuleTextures.h"
 #include "ModuleCollisions.h"
 #include "ModuleParticles.h"
-#include "SoundLibrary.h"
 #include "SoundSuccesion.h"
-#include "SDL/include/SDL.h"
+#include "Directions.h"
 
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
@@ -38,6 +37,7 @@ bool ModulePlayer::Start()
 
 	graphics = App->textures->Load("gauntlet2.png");
 	collider = App->collisions->AddCollider(COLLIDER_PLAYER, { position.x, position.y, 16, 16 }, this);
+	collider->setPos(position.x, position.y);
 
 	return true;
 }

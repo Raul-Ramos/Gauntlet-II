@@ -15,6 +15,8 @@ enum projectile_type {
 
 struct Projectile : Particle {
 
+	Projectile(fPoint position, SDL_Texture* graphics) : Particle(position, graphics){};
+
 	projectile_type projectileType;
 	int damage = 0;
 	Module* sender = nullptr;

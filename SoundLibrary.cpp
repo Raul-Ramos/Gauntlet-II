@@ -4,6 +4,8 @@
 #include "ModuleAudio.h"
 #include "SoundSuccesion.h"
 
+//Module that contains all the sounds references so they're not loaded twice
+//It also plays the sucesive sounds
 SoundLibrary::SoundLibrary(){
 	for (int i = 0; i < NO_SOUND; i++)
 		sounds[i] = -1;
@@ -90,6 +92,9 @@ void SoundLibrary::playSound(sound id){
 			break;
 		case SOUND_GAME_OVER:
 			sounds[id] = App->audio->LoadFx("sound/game_over.wav");
+			break;
+		case SOUND_LEVEL_COMPLETE:
+			sounds[id] = App->audio->LoadFx("sound/level_complete.wav");
 			break;
 		case NO_SOUND:
 		default:

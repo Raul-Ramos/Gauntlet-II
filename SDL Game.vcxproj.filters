@@ -112,8 +112,11 @@
     <ClInclude Include="SoundSuccesion.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="CharacterColors.h">
+    <ClInclude Include="Gauntlet_Colors.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="FallingAnimation.h">
+      <Filter>Game Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

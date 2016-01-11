@@ -9,6 +9,9 @@ using namespace std;
 
 ModuleGUI::ModuleGUI(){
 
+	//Stores the player select screen
+	playerSelect = { 0, 0, 216, 200 };
+
 	//Stores the border position
 	border = { 0, 0, 320, 200 };
 
@@ -38,13 +41,17 @@ ModuleGUI::ModuleGUI(){
 	}
 
 }
+
 ModuleGUI::~ModuleGUI(){}
 
 bool ModuleGUI::Start(){
 	LOG("Loading interface");
 
+	playerSelectGraphics = App->textures->Load("player_select.png");
 	borderGraphics = App->textures->Load("margin.png");
 	interfaceGraphics = App->textures->Load("interface.png");
+
+	state = GUI_STATE_PLAYER_SELECT;
 
 	return true;
 }
@@ -52,6 +59,7 @@ bool ModuleGUI::Start(){
 bool ModuleGUI::CleanUp(){
 	LOG("Unloading interface");
 
+	App->textures->Unload(playerSelectGraphics);
 	App->textures->Unload(borderGraphics);
 	App->textures->Unload(interfaceGraphics);
 
@@ -70,7 +78,7 @@ update_status ModuleGUI::Update(){
 	//Characters
 	int base = 57;
 	ModulePlayer* player;
-	colors color;
+	Gauntlet_Colors color;
 
 	for (int i = 0; i < 4; i++){
 		player = App->players->players[i];
@@ -92,10 +100,14 @@ update_status ModuleGUI::Update(){
 		base += 34;
 	}
 
+	if (state == GUI_STATE_PLAYER_SELECT){
+		App->renderer->Blit(playerSelectGraphics, 0, 0, &playerSelect, 0.0f);
+	}
+
 	return UPDATE_CONTINUE;
 }
 
-void ModuleGUI::printNumber(const int x, const iPoint position, const colors color){
+void ModuleGUI::printNumber(const int x, const iPoint position, const Gauntlet_Colors color){
 	vector<int>* digits = new vector<int>();
 	getDigits(x, digits);
 	for (int i = 0; i < digits->size(); i++)

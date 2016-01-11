@@ -5,8 +5,10 @@
 #include "ModuleTextures.h"
 #include "ModulePlayer.h"
 #include "ModuleMap.h"
+#include "ModuleParticles.h"
 #include "SoundLibrary.h"
 #include "Animation.h"
+#include "FallingAnimation.h"
 
 ModuleCollectible::ModuleCollectible(const TypeCollectible type) : Module(), type(type)
 {
@@ -35,6 +37,9 @@ update_status ModuleCollectible::Update()
 void ModuleCollectible::OnCollision(Collider* col1, Collider* col2){
 	if (col2->type == COLLIDER_PLAYER){
 
+		//Specifies if it will be deleted after doing its function
+		bool deleteAfterFunction = true;
+
 		switch (type)
 		{
 		case COLLECTIBLE_TREASURE: {
@@ -54,20 +59,56 @@ void ModuleCollectible::OnCollision(Collider* col1, Collider* col2){
 			player->numKeys += 1;
 			App->soundLib->playSound(SOUND_TAKE_KEY);
 			break; }
-		case COLLECTIBLE_EXIT:
-			break;
-		case COLLECTIBLE_EXIT_TO_6:
 			break;
 		case COLLECTIBLE_FLOOR_TRIGGER:
 			floorTriggerFunction();
 			App->soundLib->playSound(SOUND_FLOOR_TRIGGER);
+			break;
+		case COLLECTIBLE_EXIT:
+		case COLLECTIBLE_EXIT_TO_6: {
+
+			deleteAfterFunction = false;
+
+			//Creates a particle of the player falling in the hole that ends the level upon ending
+			Particle* PlayerFalling = new Particle({ (float)position.x, (float)position.y }, graphics);
+			PlayerFalling->animation = new FallingAnimation();
+			PlayerFalling->duration = 10000;
+
+			//Grid position of the first image. Y * 44 + X
+			int firstImage = 0;
+
+			switch (dynamic_cast<ModulePlayer*>(col2->father)->characterType)
+			{
+			case CHARACTER_WARRIOR:		firstImage = 9 * 44 + 32; break;
+			case CHARACTER_VALKYRIE :	firstImage = 10 * 44 + 25; break;
+			case CHARACTER_WIZARD :		firstImage = 11 * 44 + 18; break;
+			case CHARACTER_ELF :		firstImage = 12 * 44 + 11; break;
+			default:
+				break;
+			}
+
+			int dim = 16;
+			PlayerFalling->animation->speed = 0.1f;
+			for (int i = 0; i < 5; i++)
+				PlayerFalling->animation->frames.push_back({ (18 * ((firstImage + i) % 44)) + 1, (18 * ((firstImage + i) / 44)) + 1, dim, dim });
+
+			//Adds the particle, deactivates the player so it won't show and plays the level completed sound
+			App->particles->AddParticles(PlayerFalling);
+			dynamic_cast<ModulePlayer*>(col2->father)->active = false;
+			App->soundLib->playSound(SOUND_LEVEL_COMPLETE);
+
+			break;
+
+			}
 		default:
 			break;
 		}
 
 		//Deletion
 		col1->toDelete = true;
-		toDelete = true;
+		if (deleteAfterFunction) {
+			toDelete = true;
+		}
 		//End Deletion
 	}
 }

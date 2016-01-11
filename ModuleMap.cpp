@@ -7,6 +7,7 @@
 #include "ModulePlayers.h"
 #include "ModulePlayer.h"
 #include "ModuleEnemies.h"
+#include "ModuleGUI.h"
 #include "SoundLibrary.h"
 #include "Animation.h"
 #include <sstream>
@@ -14,7 +15,7 @@
 using namespace tinyxml2;
 using namespace std;
 
-ModuleMap::ModuleMap(){
+ModuleMap::ModuleMap(bool start_enabled) : Module(start_enabled) {
 
 	//Creates the walls presets
 	int dim = 18 - 2;			//Dimension. Tilesize - (border*2). Both width and height.
@@ -84,6 +85,7 @@ ModuleMap::~ModuleMap(){
 }
 
 bool ModuleMap::CleanUp(){
+
 	for (int i = 0; i < collectibles.size(); i++)
 	{
 		collectibles[i]->CleanUp();
@@ -193,8 +195,8 @@ bool ModuleMap::Start(){
 	}
 
 	//Gets the player position
-	App->players->players[0]->position.x = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("x"));
-	App->players->players[0]->position.y = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("y"));
+	startingPosition.x = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("x"));
+	startingPosition.y = stoi(doc.FirstChildElement("level")->FirstChildElement("Entities")->FirstChildElement("PlayerSpawn")->Attribute("y"));
 
 	///////////////////// MAP DRAWING /////////////////////
 	//Loads the texture

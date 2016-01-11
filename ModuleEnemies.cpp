@@ -5,7 +5,7 @@
 
 using namespace std;
 
-ModuleEnemies::ModuleEnemies(){
+ModuleEnemies::ModuleEnemies(bool start_enabled) : Module(start_enabled) {
 
 }
 
@@ -17,6 +17,7 @@ ModuleEnemies::~ModuleEnemies(){
 
 	for (vector<ModuleEnemy*>::iterator it = enemies.begin(); it != enemies.end(); ++it)
 		RELEASE(*it);
+
 	enemies.clear();
 }
 

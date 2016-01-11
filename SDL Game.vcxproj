@@ -70,10 +70,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="FallingAnimation.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Collider.h" />
-    <ClInclude Include="CharacterColors.h" />
+    <ClInclude Include="Gauntlet_Colors.h" />
     <ClInclude Include="Directions.h" />
     <ClInclude Include="Enemies.h" />
     <ClInclude Include="EnemySpawn.h" />

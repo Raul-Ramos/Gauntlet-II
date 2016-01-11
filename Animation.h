@@ -9,7 +9,7 @@ public:
 	float speed;
 	vector<SDL_Rect> frames;
 
-private:
+protected:
 	float current_frame;
 
 public:
@@ -20,7 +20,7 @@ public:
 		frames.clear();
 	}
 
-	SDL_Rect& GetCurrentAnimatedFrame()
+	virtual SDL_Rect& GetCurrentAnimatedFrame()
 	{
 		current_frame += speed;
 		if(current_frame >= frames.size())

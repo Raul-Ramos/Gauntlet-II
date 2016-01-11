@@ -71,7 +71,7 @@ struct ModuleFloorTrigger : Module {
 class ModuleMap : public Module
 {
 public:
-	ModuleMap();
+	ModuleMap(bool start_enabled = true);
 	~ModuleMap();
 
 	bool Start();
@@ -82,6 +82,8 @@ public:
 	//Map properties
 	int width;
 	int height;
+
+	fPoint startingPosition;
 
 	//Elements in the map
 	vector<Wall*> walls;

@@ -93,41 +93,46 @@ update_status ModuleEnemy::PreUpdate()
 		}
 	}
 
-	//Angle between the hero and this enemy
-	float angle = atan2(closestPlayer->position.y - position.y, closestPlayer->position.x - position.x) * 180 / M_PI;
+	//If at least one player is playing
+	if (closestPlayerDistance != -1){
 
-	//Horizontal direction
-	if (angle >= -67.5 && angle <= 67.5) {
-		++facingH;
-	} else if (abs(angle) >= 112.5){
-		--facingH;
-	}
+		//Angle between the hero and this enemy
+		float angle = atan2(closestPlayer->position.y - position.y, closestPlayer->position.x - position.x) * 180 / M_PI;
 
-	//Vertical direction
-	if (angle <= -22.5 && angle >= -157.5) {
-		++facingV;
-	} else if (angle >= 22.5 && angle <= 157.5){
-		--facingV;
-	}
+		//Horizontal direction
+		if (angle >= -67.5 && angle <= 67.5) {
+			++facingH;
+		} else if (abs(angle) >= 112.5){
+			--facingH;
+		}
 
-	//Determine facing direction
-	if (facingV < 0){
-		if (facingH > 0){ facing = DOWNRIGHT; }
-		else if (facingH < 0){ facing = DOWNLEFT; }
-		else { facing = DOWN; }
-	}
-	else if (facingV > 0){
-		if (facingH > 0){ facing = UPRIGHT; }
-		else if (facingH < 0){ facing = UPLEFT; }
-		else { facing = UP; }
-	}
-	else if (facingH > 0) { facing = RIGHT; }
-	else if (facingH < 0) { facing = LEFT; }
+		//Vertical direction
+		if (angle <= -22.5 && angle >= -157.5) {
+			++facingV;
+		} else if (angle >= 22.5 && angle <= 157.5){
+			--facingV;
+		}
 
-	//Move the character position
-	//+ speed * facingDirection
-	collider->box.x += 0.6 * facingH;
-	collider->box.y -= 0.6 * facingV;
+		//Determine facing direction
+		if (facingV < 0){
+			if (facingH > 0){ facing = DOWNRIGHT; }
+			else if (facingH < 0){ facing = DOWNLEFT; }
+			else { facing = DOWN; }
+		}
+		else if (facingV > 0){
+			if (facingH > 0){ facing = UPRIGHT; }
+			else if (facingH < 0){ facing = UPLEFT; }
+			else { facing = UP; }
+		}
+		else if (facingH > 0) { facing = RIGHT; }
+		else if (facingH < 0) { facing = LEFT; }
+
+		//Move the character position
+		//+ speed * facingDirection
+		collider->box.x += 0.6 * facingH;
+		collider->box.y -= 0.6 * facingV;
+
+	}
 
 	return UPDATE_CONTINUE;
 }

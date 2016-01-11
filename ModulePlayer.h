@@ -1,15 +1,13 @@
 #ifndef __MODULEPLAYER_H__
 #define __MODULEPLAYER_H__
 
-#include "Module.h"
-#include "Animation.h"
 #include "Globals.h"
-#include "Point.h"
-#include "Directions.h"
-#include "Characters.h"
+#include "Module.h"
 #include "Projectile.h"
-#include "CharacterColors.h"
-#include "SDL\include\SDL_stdinc.h"
+#include "Point.h"
+#include "Animation.h"
+#include "Characters.h"
+#include "Gauntlet_Colors.h"
 
 struct SDL_Texture;
 struct Collider;
@@ -41,7 +39,7 @@ public:
 	bool active = false;
 	characters characterType = CHARACTER_WARRIOR;
 	projectile_type projectileType = PROJECTILE_WARRIOR;
-	colors color;
+	Gauntlet_Colors color;
 
 	//Controls
 	int attackKey, upKey, downKey, leftKey, rightKey;
@@ -59,7 +57,7 @@ public:
 	Uint32 lastLifeLostTime;
 
 	Animation animations[8];
-	Collider* collider;
+	Collider* collider = nullptr;
 
 private:
 

@@ -13,7 +13,7 @@ struct SpawnPoint;
 class ModuleEnemies : public Module
 {
 public:
-	ModuleEnemies();
+	ModuleEnemies(bool start_enabled = true);
 	~ModuleEnemies();
 
 	bool Start();
