@@ -15,6 +15,7 @@ class ModulePlayers;
 class ModuleEnemies;
 class ModuleCollisions;
 class ModuleParticles;
+class ModuleTimeFunctions;
 class ModuleMap;
 class ModuleGUI;
 class SoundLibrary;
@@ -40,6 +41,7 @@ public:
 	ModuleAudio* audio;
 	ModuleParticles* particles;
 	ModuleCollisions* collisions;
+	ModuleTimeFunctions* timeFunctions;
 	ModuleMap* map;
 	ModulePlayers* players;
 	ModuleEnemies* enemies;

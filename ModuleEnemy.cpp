@@ -183,7 +183,7 @@ void ModuleEnemy::OnCollision(Collider* col1, Collider* col2){
 	case COLLIDER_PLAYER: {
 		ModulePlayer* player = dynamic_cast<ModulePlayer*>(col2->father);
 		player->health -= 9;
-		life = 0;
+		health = 0;
 		player->score += 10;
 		App->soundLib->playSound(SOUND_GHOST_ATTACK);
 		break;
@@ -192,8 +192,8 @@ void ModuleEnemy::OnCollision(Collider* col1, Collider* col2){
 	case COLLIDER_PROJECTILE: {
 		Projectile* projectile = dynamic_cast<Projectile*>(col2->father);
 		if (projectile->sender != this){
-			life -= projectile->damage;
-			if (life < 0 && projectile->sender != nullptr){
+			health -= projectile->damage;
+			if (health < 0 && projectile->sender != nullptr){
 				ModulePlayer* player = dynamic_cast<ModulePlayer*> (projectile->sender);
 				if (player != NULL)
 					player->score += 10;

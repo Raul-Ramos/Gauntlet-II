@@ -24,7 +24,7 @@ public:
 
 public:
 
-	int life = 1;
+	int health = 1;
 
 	SDL_Texture* graphics = nullptr;
 	fPoint position;

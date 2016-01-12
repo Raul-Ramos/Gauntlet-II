@@ -9,6 +9,7 @@
 #include "ModuleEnemy.h"
 #include "SDL/include/SDL.h"
 #include "ModulePlayer.h"
+#include "ModuleTimeFunctions.h"
 #include <vector>
 
 SpawnPoint::SpawnPoint(const enemyType type, const fPoint position) :
@@ -19,12 +20,11 @@ type(type), position(position){
 	for (int i = 1; i < 5; i++)
 		colliders[i] = NULL;
 
-	timeLastSpawn = SDL_GetTicks();
-
 }
 
 bool SpawnPoint::Start(){
 	graphics = App->textures->Load("gauntlet2.png");
+	if (spawnTimer == nullptr) spawnTimer = App->timeFunctions->AddTimeFunction(baseTimeToSpawn, this);
 	return true;
 }
 
@@ -38,15 +38,15 @@ bool SpawnPoint::CleanUp()
 	if (colliders[i] != NULL)
 		colliders[i]->toDelete = true;
 
+	spawnTimer->toDelete = true;
+
 	return true;
 }
 
-update_status SpawnPoint::PreUpdate(){
+update_status SpawnPoint::Update(){
 
-	Uint32 time = SDL_GetTicks();
-
-	//Check if enough time has passed so a new enemy can be created
-	if (time > timeLastSpawn + timeToSpawn){
+	//If we're in the process of creating a new enemy
+	if (spawning){
 
 		fRect spawner = colliders[0]->box;
 		fRect camera = {
@@ -57,61 +57,45 @@ update_status SpawnPoint::PreUpdate(){
 		if (spawner.x < camera.x + camera.w && spawner.x + spawner.w > camera.x &&
 			spawner.y < camera.y + camera.h && spawner.y + spawner.h > camera.y){
 
-			//If it can create a new monster, create temporal colliders
-			colliders[CDIRECTION_LEFT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x - 16, position.y, 16, 16 }, this);
-			colliders[CDIRECTION_RIGHT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x + 16, position.y, 16, 16 }, this);
-			colliders[CDIRECTION_UP] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x, position.y - 16, 16, 16 }, this);
-			colliders[CDIRECTION_DOWN] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x, position.y + 16, 16, 16 }, this);
+			//Checks the free spaces
+			std::vector<fPoint> freeSpawnSpaces;
 
-		}
-	}
+			//Check temporal colliders
+			for (int i = 1; i < 5; i++) {
 
-	return UPDATE_CONTINUE;
-}
-update_status SpawnPoint::Update(){
+				//If it's not invalid
+				if (colliders[i] != NULL){
 
-	Uint32 time = SDL_GetTicks();
+					//Stores the position
+					fPoint enemyPosition = position;
+					if (i == CDIRECTION_DOWN) enemyPosition.y += 16;
+					if (i == CDIRECTION_UP) enemyPosition.y -= 16;
+					if (i == CDIRECTION_RIGHT) enemyPosition.x += 16;
+					if (i == CDIRECTION_LEFT) enemyPosition.x -= 16;
+					freeSpawnSpaces.push_back(enemyPosition);
 
-	//If it can create a new monster
-	if (time > timeLastSpawn + timeToSpawn){
-
-		//Checks the free spaces
-		std::vector<fPoint> freeSpawnSpaces;
-
-		//Check temporal colliders
-		for (int i = 1; i < 5; i++) {
-
-			//If it's not invalid
-			if (colliders[i] != NULL){
-
-				//Stores the position
-				fPoint enemyPosition = position;
-				if (i == CDIRECTION_DOWN) enemyPosition.y += 16;
-				if (i == CDIRECTION_UP) enemyPosition.y -= 16;
-				if (i == CDIRECTION_RIGHT) enemyPosition.x += 16;
-				if (i == CDIRECTION_LEFT) enemyPosition.x -= 16;
-				freeSpawnSpaces.push_back(enemyPosition);
-
-				//Deletes the collider
-				colliders[i]->toDelete = true;
-				colliders[i] = NULL;
+					//Deletes the collider
+					colliders[i]->toDelete = true;
+					colliders[i] = NULL;
+				}
 			}
-		}
 
-		//If there are free locations
-		if (freeSpawnSpaces.size() > 0) {
+			//If there are free locations
+			if (freeSpawnSpaces.size() > 0) {
 
-			//Adds an enemy in a random free location.
-			App->enemies->AddEnemy(freeSpawnSpaces.at(rand() % freeSpawnSpaces.size()));
+				//Adds an enemy in a random free location.
+				App->enemies->AddEnemy(freeSpawnSpaces.at(rand() % freeSpawnSpaces.size()));
 
-			//Sets the next spawn time with some random percent offset
-			int min = 30, max = 110;
-			float offset = rand() % (max - min + 1) + min;
-			timeToSpawn = baseTimeToSpawn * (offset / 100);
+				//Sets the next spawn time with some random percent offset
+				int min = 30, max = 110;
+				float offset = rand() % (max - min + 1) + min;
+				spawnTimer->duration = baseTimeToSpawn * (offset / 100);
+				spawnTimer->begin = SDL_GetTicks();
 
-			//If there are no disponible locations it will not wait for the spawn cooldown
-			//and will spawn a enemy as soon as posible
-			timeLastSpawn = time;
+				//If there are no disponible locations it will not wait for the spawn cooldown
+				//and will spawn a enemy as soon as posible
+				spawning = false;
+			}
 		}
 	}
 
@@ -127,8 +111,8 @@ void SpawnPoint::OnCollision(Collider* c1, Collider* c2){
 		Projectile* projectile = dynamic_cast<Projectile*>(c2->father);
 
 		//If a projectile hits it, take damage
-		life -= projectile->damage;
-		if (life < 1){
+		health -= projectile->damage;
+		if (health < 1){
 
 			App->map->floor.push_back(new iPoint{ (int)position.x, (int)position.y });
 
@@ -153,3 +137,19 @@ void SpawnPoint::OnCollision(Collider* c1, Collider* c2){
 
 	}
 }
+
+//When a new enemy can be spawned
+void SpawnPoint::onTimeFunction(TimeFunction* timeFunction){
+
+	//If we're not already trying to spawn an enemy
+	if (!spawning){
+		spawning = true;
+
+		//If it can create a new monster, create temporal colliders
+		colliders[CDIRECTION_LEFT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x - 16, position.y, 16, 16 }, this);
+		colliders[CDIRECTION_RIGHT] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x + 16, position.y, 16, 16 }, this);
+		colliders[CDIRECTION_UP] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x, position.y - 16, 16, 16 }, this);
+		colliders[CDIRECTION_DOWN] = App->collisions->AddCollider(COLLIDER_SPAWNPOINT, { position.x, position.y + 16, 16, 16 }, this);
+	}
+}
+

@@ -8,6 +8,7 @@
 #include "ModuleCollisions.h"
 #include "ModuleParticles.h"
 #include "SoundSuccesion.h"
+#include "ModuleTimeFunctions.h"
 #include "Directions.h"
 
 // Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
@@ -22,9 +23,6 @@ ModulePlayer::ModulePlayer(bool start_enabled) : Module(start_enabled)
 	animations[DOWNLEFT].speed = 0.15f;
 	animations[LEFT].speed = 0.15f;
 	animations[UPLEFT].speed = 0.15f;
-
-	//Starts the life lost time
-	lastLifeLostTime = SDL_GetTicks();
 }
 
 ModulePlayer::~ModulePlayer()
@@ -39,6 +37,7 @@ bool ModulePlayer::Start()
 	graphics = App->textures->Load("gauntlet2.png");
 	collider = App->collisions->AddCollider(COLLIDER_PLAYER, { position.x, position.y, 16, 16 }, this);
 	collider->setPos(position.x, position.y);
+	if (lifeLose == nullptr) lifeLose = App->timeFunctions->AddTimeFunction(1000, this, "LifeLose");
 
 	return true;
 }
@@ -49,6 +48,19 @@ bool ModulePlayer::CleanUp()
 	LOG("Unloading player");
 
 	App->textures->Unload(graphics);
+
+	if (collider != nullptr){
+		collider->toDelete = true;
+		collider = nullptr;
+	}
+	if (dyingSound != nullptr){
+		dyingSound->toDelete = true;
+		dyingSound = nullptr;
+	}
+	if (lifeLose != nullptr){
+		lifeLose->toDelete = true;
+		lifeLose = nullptr;
+	}
 
 	return true;
 }
@@ -130,13 +142,6 @@ update_status ModulePlayer::Update(){
 			App->players->playerDies(this);
 			return UPDATE_CONTINUE;
 		}
-		
-		//Loses 1 of life every second
-		Uint32 time = SDL_GetTicks();
-		if (time > lastLifeLostTime + 1000){
-			--health;
-			lastLifeLostTime = time;
-		}
 
 		//// CRITICAL STATE ////
 		//The player gets in their correct critical state
@@ -146,6 +151,7 @@ update_status ModulePlayer::Update(){
 				succesion->succesion.push_back({ SOUND_NARRATOR_DYING, 0 });
 				App->soundLib->AddSoundSuccesion(succesion);
 				criticalState = state_minus_200;
+				if (dyingSound == nullptr) dyingSound = App->timeFunctions->AddTimeFunction(1500, this, "CriticalHealthAlarm");
 			}
 		}
 		else if (health <= 500 && criticalState != state_minus_500){
@@ -160,6 +166,10 @@ update_status ModulePlayer::Update(){
 		}
 		else if (health > 500 && criticalState != state_stable){
 			criticalState = state_stable;
+			if (dyingSound != nullptr){
+				dyingSound->toDelete = true;
+				dyingSound == nullptr;
+			}
 		}
 
 		//// MOVEMENT ////
@@ -223,6 +233,18 @@ void ModulePlayer::OnCollision(Collider* col1, Collider* col2){
 	default:
 		break;
 	}
+}
+
+void ModulePlayer::onTimeFunction(TimeFunction* timeFunction){
+
+	//Loses life every second
+	if (timeFunction->message == "LifeLose"){
+		if (active) --health;
+	}
+	else if (timeFunction->message == "CriticalHealthAlarm"){
+		App->soundLib->playSound(SOUND_LOW_HEALTH);
+	}
+
 }
 
 //Returns a sound succession with is color and class

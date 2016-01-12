@@ -13,6 +13,7 @@ enum colliderDirection{
 
 struct Collider;
 struct SDL_Texture;
+struct TimeFunction;
 
 struct SpawnPoint : Module {
 
@@ -25,16 +26,17 @@ struct SpawnPoint : Module {
 	SDL_Texture* graphics = nullptr;
 	Animation animation;
 
+	TimeFunction* spawnTimer = nullptr;
 	int baseTimeToSpawn = 2500;
-	int timeToSpawn = 0;
-	Uint32 timeLastSpawn = timeLastSpawn;
-	int life = 1;
+	bool spawning = false;
+
+	int health = 1;
 
 	bool Start();
-	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(Collider* c1, Collider* c2);
+	void onTimeFunction(TimeFunction* timeFunction);
 
 };
 

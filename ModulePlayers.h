@@ -27,14 +27,12 @@ public:
 	ModulePlayer* players[4];
 	int playerJoinButton[4];
 	void playerDies(ModulePlayer* player);
+	void onTimeFunction(TimeFunction* timeFunction);
 
 private:
 
 	//Adjusts the camera given the players position
 	void adjustCamera();
-
-	//If it is not -1, it will be used to end the game after a given time
-	Uint32 beginGameOver = -1;
 	
 	//Used for player joining
 	int playerJoining = 0;					//What players is joining. 0 is no one, as the player one is always on.

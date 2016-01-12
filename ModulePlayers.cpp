@@ -8,6 +8,7 @@
 #include "ModuleCollisions.h"
 #include "ModuleRender.h"
 #include "SoundSuccesion.h"
+#include "ModuleTimeFunctions.h"
 
 ModulePlayers::ModulePlayers(){
 
@@ -149,12 +150,6 @@ update_status ModulePlayers::Update(){
 		playerJoining = 0;
 	}
 
-	//If it's game over and enough time has passed, restart
-	if (beginGameOver != -1 && beginGameOver + 5000 < SDL_GetTicks()){
-		App->restart = true;
-		beginGameOver = -1;
-	}
-
 	return UPDATE_CONTINUE;
 };
 
@@ -247,9 +242,11 @@ void ModulePlayers::playerDies(ModulePlayer* player){
 
 	player->health = 0;
 	player->active = false;
-	player->collider->toDelete = true;
+	player->CleanUp();
+
+	App->soundLib->playSound(SOUND_GAME_OVER);
 	
-	//Puts an skeleton in his position
+	//Puts an skeleton in its position
 	App->enemies->AddSpawnPoint(ENEMYTYPE_GHOST, player->position);
 
 	//Checks if the other players are dead too
@@ -261,10 +258,16 @@ void ModulePlayers::playerDies(ModulePlayer* player){
 		}
 	}
 
-	//If they're all dead, begin the end
+	//If they're all dead, end the game after 5 seconds
 	if (allDead){
-		beginGameOver = SDL_GetTicks();
+		App->timeFunctions->AddTimeFunction(5000, this);
 	}
+}
+
+//End the game after a defeat
+void ModulePlayers::onTimeFunction(TimeFunction* timeFunction){
+	App->restart = true;
+	timeFunction->toDelete = true;
 }
 
 //Adjusts the camera given the players position

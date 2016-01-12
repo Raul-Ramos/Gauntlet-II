@@ -12,6 +12,7 @@
 struct SDL_Texture;
 struct Collider;
 struct SoundSuccesion;
+struct TimeFunction;
 
 enum critical_state {
 	state_stable,
@@ -30,6 +31,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(Collider* c1, Collider* c2);
+	void onTimeFunction(TimeFunction* timeFunction);
 
 	//Returns a sound succession with is color and class
 	SoundSuccesion* characterSoundSuccesion();
@@ -53,8 +55,8 @@ public:
 	fPoint position;
 	Facing facing = DOWN;
 
-	//When the player lost life naturally last time
-	Uint32 lastLifeLostTime;
+	TimeFunction* lifeLose = nullptr;
+	TimeFunction* dyingSound = nullptr;
 
 	Animation animations[8];
 	Collider* collider = nullptr;

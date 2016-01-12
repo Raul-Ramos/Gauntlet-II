@@ -8,6 +8,7 @@
 #include "ModulePlayers.h"
 #include "ModuleParticles.h"
 #include "ModuleCollisions.h"
+#include "ModuleTimeFunctions.h"
 #include "ModuleEnemies.h"
 #include "ModuleMap.h"
 #include "ModuleGUI.h"
@@ -26,6 +27,7 @@ Application::Application()
 	modules.push_back(audio = new ModuleAudio());
 
 	modules.push_back(map = new ModuleMap(false));
+	modules.push_back(timeFunctions = new ModuleTimeFunctions());
 	modules.push_back(particles = new ModuleParticles());
 	modules.push_back(collisions = new ModuleCollisions());
 

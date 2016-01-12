@@ -3,6 +3,7 @@
 
 class Application;
 struct Collider;
+struct TimeFunction;
 
 class Module
 {
@@ -66,6 +67,9 @@ public:
 	}
 
 	virtual void OnCollision(Collider* col1, Collider* col2)
+	{}
+
+	virtual void onTimeFunction(TimeFunction* timeFunction)
 	{}
 
 private:
