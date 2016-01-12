@@ -2,6 +2,8 @@
 #define __MODULE_H__
 
 class Application;
+struct Collider;
+struct TimeFunction;
 
 class Module
 {
@@ -10,7 +12,7 @@ public:
 	Module(bool active = true) : active(active)
 	{}
 
-	~Module()
+	virtual ~Module()
 	{}
 
 	bool IsEnabled() const
@@ -63,6 +65,12 @@ public:
 	{ 
 		return true; 
 	}
+
+	virtual void OnCollision(Collider* col1, Collider* col2)
+	{}
+
+	virtual void onTimeFunction(TimeFunction* timeFunction)
+	{}
 
 private:
 	bool active = true;

@@ -10,6 +10,8 @@ ModuleRender::ModuleRender()
 	camera.x = camera.y = 0;
 	camera.w = SCREEN_WIDTH * SCREEN_SIZE;
 	camera.h = SCREEN_HEIGHT* SCREEN_SIZE;
+
+	backgroundColor = { 0, 0, 0, SDL_ALPHA_OPAQUE };
 }
 
 // Destructor
@@ -41,7 +43,7 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 	SDL_RenderClear(renderer);
 	return UPDATE_CONTINUE;
 }
@@ -49,6 +51,7 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
+	/*
 	// debug camera
 	int speed = 1;
 
@@ -63,6 +66,8 @@ update_status ModuleRender::Update()
 
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->renderer->camera.x -= speed;
+
+	*/
 
 	return UPDATE_CONTINUE;
 }

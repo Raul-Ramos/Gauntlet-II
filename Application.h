@@ -11,6 +11,14 @@ class ModuleTextures;
 class ModuleInput;
 class ModuleAudio;
 class ModuleFadeToBlack;
+class ModulePlayers;
+class ModuleEnemies;
+class ModuleCollisions;
+class ModuleParticles;
+class ModuleTimeFunctions;
+class ModuleMap;
+class ModuleGUI;
+class SoundLibrary;
 
 class Application
 {
@@ -23,13 +31,25 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void Restart();
+
 public:
 	ModuleRender* renderer;
 	ModuleWindow* window;
 	ModuleTextures* textures;
 	ModuleInput* input;
 	ModuleAudio* audio;
+	ModuleParticles* particles;
+	ModuleCollisions* collisions;
+	ModuleTimeFunctions* timeFunctions;
+	ModuleMap* map;
+	ModulePlayers* players;
+	ModuleEnemies* enemies;
+	ModuleGUI* GUI;
 	ModuleFadeToBlack* fade;
+	SoundLibrary* soundLib;
+
+	bool restart = false;
 
 private:
 

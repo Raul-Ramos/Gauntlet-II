@@ -25,6 +25,7 @@ public:
 public:
 	SDL_Renderer* renderer = nullptr;
 	SDL_Rect camera;
+	SDL_Color backgroundColor;
 };
 
 #endif // __MODULERENDER_H__

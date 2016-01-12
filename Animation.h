@@ -9,18 +9,27 @@ public:
 	float speed;
 	vector<SDL_Rect> frames;
 
-private:
+protected:
 	float current_frame;
 
 public:
 	Animation() : frames(), speed(1.0f), current_frame(0.0f)
 	{}
 
-	SDL_Rect& GetCurrentFrame()
+	~Animation(){
+		frames.clear();
+	}
+
+	virtual SDL_Rect& GetCurrentAnimatedFrame()
 	{
 		current_frame += speed;
 		if(current_frame >= frames.size())
 			current_frame = 0.0f;
+		return frames[(int)current_frame];
+	}
+
+	SDL_Rect& GetCurrentFrame()
+	{
 		return frames[(int)current_frame];
 	}
 };
