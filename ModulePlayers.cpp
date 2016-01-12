@@ -9,8 +9,9 @@
 #include "ModuleRender.h"
 #include "SoundSuccesion.h"
 #include "ModuleTimeFunctions.h"
+#include "GUIScene-game.h"
 
-ModulePlayers::ModulePlayers(){
+ModulePlayers::ModulePlayers(bool start_enabled){
 
 	//Creates the players
 	for (int i = 0; i < 4; i++){
@@ -102,7 +103,7 @@ update_status ModulePlayers::PreUpdate(){
 				App->enemies->Enable();
 
 				//End the player select state
-				App->GUI->state = GUI_STATE_GAME;
+				dynamic_cast<GUIScene_Game*>(App->GUI->scene)->state = GUI_STATE_GAME;
 
 				//and spawn in the first players position (it is assigned by module map)
 				players[i]->position = App->map->startingPosition;

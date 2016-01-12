@@ -14,6 +14,8 @@
 #include "ModuleGUI.h"
 #include "SoundLibrary.h"
 
+#include "GUIScene-game.h"
+
 using namespace std;
 
 Application::Application()
@@ -33,7 +35,7 @@ Application::Application()
 
 	// Game Modules
 	modules.push_back(enemies = new ModuleEnemies(false));
-	modules.push_back(players = new ModulePlayers());
+	modules.push_back(players = new ModulePlayers(false));
 	modules.push_back(GUI = new ModuleGUI());
 	modules.push_back(fade = new ModuleFadeToBlack());
 	modules.push_back(soundLib = new SoundLibrary());
@@ -122,7 +124,7 @@ void Application::Restart(){
 	modules.push_back(particles = new ModuleParticles());
 	modules.push_back(collisions = new ModuleCollisions());
 	modules.push_back(enemies = new ModuleEnemies(false));
-	modules.push_back(players = new ModulePlayers());
+	modules.push_back(players = new ModulePlayers(false));
 
 	modules.push_back(GUI);
 	modules.push_back(fade);
@@ -132,7 +134,7 @@ void Application::Restart(){
 	collisions->Start();
 	players->Start();
 
-	GUI->state = GUI_STATE_PLAYER_SELECT;
+	GUI->changeScene(new GUIScene_Game());
 
 	restart = false;
 }

@@ -36,6 +36,7 @@ public:
 	ModuleTimeFunctions(){};
 	~ModuleTimeFunctions();
 
+	bool CleanUp();
 	update_status Update();
 
 	TimeFunction* AddTimeFunction(const Uint32 duration, Module* target, const std::string message = "");

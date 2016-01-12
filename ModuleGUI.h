@@ -3,17 +3,6 @@
 
 #include "Globals.h"
 #include "Module.h"
-#include "Characters.h"
-#include "Point.h"
-#include "Gauntlet_Colors.h"
-#include <vector>
-
-enum GUI_STATE {
-	GUI_STATE_PLAYER_SELECT,
-	GUI_STATE_GAME
-};
-
-struct SDL_Texture;
 
 class ModuleGUI : public Module
 {
@@ -24,32 +13,15 @@ public:
 	bool Start();
 	update_status Update();
 	bool CleanUp();
+	void onTimeFunction(TimeFunction* timeFunction);
 
-	GUI_STATE state = GUI_STATE_PLAYER_SELECT;
+	void changeScene(Module* change_scene);
+
+	Module* scene;
 
 private:
 
-	SDL_Texture* playerSelectGraphics = nullptr;
-	SDL_Texture* borderGraphics = nullptr;
-	SDL_Texture* interfaceGraphics = nullptr;
-
-	SDL_Rect playerSelect;
-	SDL_Rect border;
-
-	SDL_Rect level;
-	SDL_Rect selectHero;
-	SDL_Rect key;
-
-	SDL_Rect numbers[COLOR_WHITE + 1][10];
-	SDL_Rect characters[COLOR_GREEN + 1][CHARACTER_ELF + 1];
-	SDL_Rect ScoreHealth[COLOR_GREEN + 1];
-
-	//Prints a number x in the screen,
-	//position being the leftmost number
-	void printNumber(const int x, const iPoint position, const Gauntlet_Colors color);
-	//Gets the digits of a number
-	void getDigits(const int x, std::vector<int>* digits);
-
+	Module* newScene = nullptr;
 };
 
 #endif // __MODULEINTERFACE_H__

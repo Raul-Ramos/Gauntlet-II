@@ -17,6 +17,9 @@
     <Filter Include="Utils\tinyxml2">
       <UniqueIdentifier>{5514c2c7-cda9-4a8a-b943-2ee8a1071645}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUIScenes">
+      <UniqueIdentifier>{a43bdc36-117d-48f9-b82d-a6ef967a8a1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleRender.h">
@@ -121,6 +124,12 @@
     <ClInclude Include="ModuleTimeFunctions.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
+    <ClInclude Include="GUIScene-intro.h">
+      <Filter>GUIScenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIScene-game.h">
+      <Filter>GUIScenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -194,6 +203,12 @@
     </ClCompile>
     <ClCompile Include="ModuleTimeFunctions.cpp">
       <Filter>Core Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIScene-intro.cpp">
+      <Filter>GUIScenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIScene-game.cpp">
+      <Filter>GUIScenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

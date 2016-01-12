@@ -1,9 +1,16 @@
 #include "ModuleTimeFunctions.h"
 
 ModuleTimeFunctions::~ModuleTimeFunctions(){
+	CleanUp();
+}
+
+
+bool ModuleTimeFunctions::CleanUp(){
 	for (std::vector<TimeFunction*>::iterator it = timeFunctions.begin(); it != timeFunctions.end(); ++it)
 		RELEASE(*it);
 	timeFunctions.clear();
+
+	return true;
 }
 
 update_status ModuleTimeFunctions::Update(){

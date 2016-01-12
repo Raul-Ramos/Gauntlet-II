@@ -80,6 +80,8 @@
     <ClInclude Include="EnemySpawn.h" />
     <ClInclude Include="fRect.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="GUIScene-game.h" />
+    <ClInclude Include="GUIScene-intro.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAudio.h" />
     <ClInclude Include="ModuleCollectible.h" />
@@ -107,6 +109,8 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="EnemySpawn.cpp" />
+    <ClCompile Include="GUIScene-game.cpp" />
+    <ClCompile Include="GUIScene-intro.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />

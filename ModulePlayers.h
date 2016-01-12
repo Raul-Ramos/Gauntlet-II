@@ -14,7 +14,7 @@ struct Collider;
 class ModulePlayers : public Module
 {
 public:
-	ModulePlayers();
+	ModulePlayers(bool start_enabled = true);
 	~ModulePlayers();
 
 	update_status PreUpdate();
