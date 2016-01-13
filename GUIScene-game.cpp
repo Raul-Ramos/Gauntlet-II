@@ -47,9 +47,9 @@ GUIScene_Game::~GUIScene_Game(){
 bool GUIScene_Game::Start(){
 
 	LOG("Loading gameGUI");
-	playerSelectGraphics = App->textures->Load("player_select.png");
-	borderGraphics = App->textures->Load("margin.png");
-	interfaceGraphics = App->textures->Load("interface.png");
+	playerSelectGraphics = App->textures->Load("graphics//player_select.png");
+	borderGraphics = App->textures->Load("graphics//margin.png");
+	interfaceGraphics = App->textures->Load("graphics//interface.png");
 
 	state = GUI_STATE_PLAYER_SELECT;
 	App->players->Enable();

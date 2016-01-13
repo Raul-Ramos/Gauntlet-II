@@ -50,7 +50,7 @@ bool ModuleEnemy::Start()
 {
 	LOG("Loading enemy");
 
-	graphics = App->textures->Load("gauntlet2.png");
+	graphics = App->textures->Load("graphics//gauntlet2.png");
 	collider = App->collisions->AddCollider(COLLIDER_ENEMY, { position.x, position.y, 16, 16 }, this);
 
 	return true;
