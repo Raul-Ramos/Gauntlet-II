@@ -102,12 +102,13 @@ update_status SpawnPoint::Update(){
 			}
 		}
 
+		spawning = false;
+
 		//If there are no disponible locations it will not wait for the spawn cooldown
 		//and will spawn a enemy as soon as posible
-		if (spawning == false)
+		if (spawned == false)
 			onTimeFunction(spawnTimer);
 
-		spawning = false;
 	}
 
 	//Print graphic
