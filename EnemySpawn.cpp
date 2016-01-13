@@ -48,6 +48,8 @@ update_status SpawnPoint::Update(){
 	//If we're in the process of creating a new enemy
 	if (spawning){
 
+		bool spawned = false;
+
 		fRect spawner = colliders[0]->box;
 		fRect camera = {
 			-App->renderer->camera.x / 2, -App->renderer->camera.y / 2,
@@ -73,10 +75,6 @@ update_status SpawnPoint::Update(){
 					if (i == CDIRECTION_RIGHT) enemyPosition.x += 16;
 					if (i == CDIRECTION_LEFT) enemyPosition.x -= 16;
 					freeSpawnSpaces.push_back(enemyPosition);
-
-					//Deletes the collider
-					colliders[i]->toDelete = true;
-					colliders[i] = NULL;
 				}
 			}
 
@@ -92,11 +90,24 @@ update_status SpawnPoint::Update(){
 				spawnTimer->duration = baseTimeToSpawn * (offset / 100);
 				spawnTimer->begin = SDL_GetTicks();
 
-				//If there are no disponible locations it will not wait for the spawn cooldown
-				//and will spawn a enemy as soon as posible
-				spawning = false;
+				spawned = true;
 			}
 		}
+
+		//Cleans the colliders
+		for (int i = 1; i < 5; i++) {
+			if (colliders[i] != NULL){
+				colliders[i]->toDelete = true;
+				colliders[i] = NULL;
+			}
+		}
+
+		//If there are no disponible locations it will not wait for the spawn cooldown
+		//and will spawn a enemy as soon as posible
+		if (spawning == false)
+			onTimeFunction(spawnTimer);
+
+		spawning = false;
 	}
 
 	//Print graphic
