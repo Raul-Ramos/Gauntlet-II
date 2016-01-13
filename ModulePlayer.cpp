@@ -34,7 +34,7 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	graphics = App->textures->Load("gauntlet2.png");
+	graphics = App->textures->Load("graphics//gauntlet2.png");
 	collider = App->collisions->AddCollider(COLLIDER_PLAYER, { position.x, position.y, 16, 16 }, this);
 	collider->setPos(position.x, position.y);
 	if (lifeLose == nullptr) lifeLose = App->timeFunctions->AddTimeFunction(1000, this, "LifeLose");

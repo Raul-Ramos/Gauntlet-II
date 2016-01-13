@@ -36,14 +36,14 @@ GUIScene_Intro::~GUIScene_Intro(){
 bool GUIScene_Intro::Start(){
 
 	LOG("Loading intro");
-	intro1_image_graphics = App->textures->Load("intro_1.png");
-	intro2_background_graphics = App->textures->Load("intro_2_background.png");
-	intro2_demon_graphics = App->textures->Load("intro_2_demon.png");
-	intro2_title_graphics = App->textures->Load("gauntlet.png");
-	intro2_II_graphics = App->textures->Load("II.png");
-	intro3_image_graphics = App->textures->Load("intro_3.png");
-	intro4_image_graphics = App->textures->Load("intro_4.png");
-	intro5_image_graphics = App->textures->Load("player_select.png");
+	intro1_image_graphics = App->textures->Load("graphics//intro_1.png");
+	intro2_background_graphics = App->textures->Load("graphics//intro_2_background.png");
+	intro2_demon_graphics = App->textures->Load("graphics//intro_2_demon.png");
+	intro2_title_graphics = App->textures->Load("graphics//gauntlet.png");
+	intro2_II_graphics = App->textures->Load("graphics//II.png");
+	intro3_image_graphics = App->textures->Load("graphics//intro_3.png");
+	intro4_image_graphics = App->textures->Load("graphics//intro_4.png");
+	intro5_image_graphics = App->textures->Load("graphics//player_select.png");
 	return true;
 }
 

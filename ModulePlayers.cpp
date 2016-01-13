@@ -11,7 +11,7 @@
 #include "ModuleTimeFunctions.h"
 #include "GUIScene-game.h"
 
-ModulePlayers::ModulePlayers(bool start_enabled){
+ModulePlayers::ModulePlayers(bool start_enabled): Module(start_enabled){
 
 	//Creates the players
 	for (int i = 0; i < 4; i++){

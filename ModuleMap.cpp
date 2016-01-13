@@ -163,7 +163,7 @@ bool ModuleMap::Start(){
 	///////////////////// XML READING /////////////////////
 	//Loads the level
 	XMLDocument doc;
-	doc.LoadFile("../Ogmo/Level_1.oel");
+	doc.LoadFile("Ogmo//Level_1.oel");
 
 	//Reads width and height
 	width = stoi(doc.FirstChildElement("level")->Attribute("width")) / 16;
@@ -200,7 +200,7 @@ bool ModuleMap::Start(){
 
 	///////////////////// MAP DRAWING /////////////////////
 	//Loads the texture
-	graphics = App->textures->Load("gauntlet2.png");
+	graphics = App->textures->Load("graphics//gauntlet2.png");
 
 	int x, y, direction;
 	int doorGroupId = 0;

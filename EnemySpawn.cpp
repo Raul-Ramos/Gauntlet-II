@@ -23,7 +23,7 @@ type(type), position(position){
 }
 
 bool SpawnPoint::Start(){
-	graphics = App->textures->Load("gauntlet2.png");
+	graphics = App->textures->Load("graphics//gauntlet2.png");
 	if (spawnTimer == nullptr) spawnTimer = App->timeFunctions->AddTimeFunction(baseTimeToSpawn, this);
 	return true;
 }
