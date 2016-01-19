@@ -49,6 +49,7 @@ public:
 	ModuleFadeToBlack* fade;
 	SoundLibrary* soundLib;
 
+	bool debugMode = false;
 	bool restart = false;
 
 private:

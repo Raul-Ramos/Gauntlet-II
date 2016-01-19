@@ -9,6 +9,7 @@
 #include "Directions.h"
 
 struct SDL_Texture;
+struct ModulePlayer;
 
 class ModuleEnemy : public Module
 {
@@ -32,6 +33,8 @@ public:
 
 	Animation animations[8];
 	Collider* collider;
+
+	ModulePlayer* closestPlayer = nullptr;
 
 };
 

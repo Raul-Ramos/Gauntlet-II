@@ -73,7 +73,7 @@ update_status ModuleEnemy::PreUpdate()
 	int facingH = 0;
 	int facingV = 0;
 
-	ModulePlayer* closestPlayer = nullptr;
+	closestPlayer = nullptr;
 	float closestPlayerDistance = -1;
 	float distance;
 
@@ -161,10 +161,43 @@ update_status ModuleEnemy::Update(){
 void ModuleEnemy::OnCollision(Collider* col1, Collider* col2){
 	switch (col2->type)
 	{
-	case COLLIDER_WALL:
 	case COLLIDER_ENEMY:
+	{
+
+		ModuleEnemy* enemy = dynamic_cast<ModuleEnemy*>(col2->father);
+		fRect* col1b = &col1->box;
+		fRect* col2b = &col2->box;
+
+		//Will correct itself if they're going in the same direction and the other enemy is
+		//closer to the target
+		float dist1 = -1;
+		float dist2 = -1;
+
+		if (closestPlayer != nullptr)
+			dist1 = sqrtf(pow((closestPlayer->position.y - col1b->y), 2) + pow((closestPlayer->position.x - col1b->x), 2));
+		else break;
+
+		if (enemy->closestPlayer != nullptr)
+			dist2 = sqrtf(pow((enemy->closestPlayer->position.y - col2b->y), 2) + pow((enemy->closestPlayer->position.x - col2b->x), 2));
+		else break;
+
+		//Vertical correction
+		if (position.x < col2b->x + col2b->w && position.x + col1b->w > col2b->x && (dist2 < dist1))
+		{
+			collider->box.y = position.y;
+		}
+
+		//Horizontal correction
+		if (position.y < col2b->y + col2b->h && position.y + col1b->h > col2b->y && (dist2 < dist1)){
+			collider->box.x = position.x;
+		}
+
+		break;
+	}
+	case COLLIDER_WALL:
 	case COLLIDER_COLLECTIBLE:
 	{
+
 		//If you can't go in that direction
 
 		fRect* col1b = &col1->box;

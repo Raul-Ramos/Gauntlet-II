@@ -34,8 +34,8 @@ Application::Application()
 	modules.push_back(collisions = new ModuleCollisions());
 
 	// Game Modules
-	modules.push_back(enemies = new ModuleEnemies(false));
 	modules.push_back(players = new ModulePlayers(false));
+	modules.push_back(enemies = new ModuleEnemies(false));
 	modules.push_back(GUI = new ModuleGUI());
 	modules.push_back(fade = new ModuleFadeToBlack());
 	modules.push_back(soundLib = new SoundLibrary());
@@ -65,6 +65,11 @@ bool Application::Init()
 
 update_status Application::Update()
 {
+	if (input->GetKey(SDL_SCANCODE_F12) == KEY_DOWN){
+		if (debugMode) debugMode = false; else debugMode = true;
+	}
+
+	
 	update_status ret = UPDATE_CONTINUE;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)

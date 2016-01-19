@@ -18,9 +18,9 @@ public:
 
 	Collider* AddCollider(const COLLIDER_TYPE type, const fRect box, Module* father = NULL);
 
-private:
-
 	std::vector<Collider*> colliders;
+
+private:
 	bool matrix[COLLIDER_NONE][COLLIDER_NONE];
 };
 
